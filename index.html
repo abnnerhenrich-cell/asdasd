@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Casttelo Clone</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+    video.bg-video {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      min-width: 100%;
+      min-height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+    .overlay {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      color: #fff;
+      text-shadow: 0 2px 5px rgba(0,0,0,0.6);
+    }
+    .avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 3px solid white;
+      margin-bottom: 15px;
+    }
+    .links a {
+      display: block;
+      margin: 8px 0;
+      padding: 12px 20px;
+      border-radius: 25px;
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+      text-decoration: none;
+      backdrop-filter: blur(5px);
+      transition: 0.3s;
+    }
+    .links a:hover {
+      background: rgba(255,255,255,0.4);
+    }
+    .audio-controls {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Vídeo de fundo -->
+  <video autoplay muted loop class="bg-video">
+    <source src="https://cdn.guns.lol/clips/bg.mp4" type="video/mp4">
+    Seu navegador não suporta vídeos HTML5.
+  </video>
+
+  <div class="overlay">
+    <img src="avatar.png" alt="Avatar" class="avatar">
+    <h1>@casttelo</h1>
+    <p>Meus links abaixo:</p>
+
+    <div class="links">
+      <a href="#">Instagram</a>
+      <a href="#">YouTube</a>
+      <a href="#">Twitter</a>
+    </div>
+
+    <!-- Música de fundo -->
+    <div class="audio-controls">
+      <audio id="bg-music" autoplay loop controls>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        Seu navegador não suporta áudio HTML5.
+      </audio>
+    </div>
+  </div>
+</body>
+</html>
