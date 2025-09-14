@@ -52,8 +52,28 @@
     .links a:hover {
       background: rgba(255,255,255,0.4);
     }
-    .audio-controls {
-      margin-top: 20px;
+    audio { display: none; }
+
+    /* Botão flutuante */
+    #music-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(6px);
+      color: #fff;
+      font-size: 22px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      transition: background 0.3s;
+      z-index: 20;
+    }
+    #music-toggle:hover {
+      background: rgba(255,255,255,0.35);
     }
   </style>
 </head>
@@ -74,14 +94,35 @@
       <a href="#">YouTube</a>
       <a href="#">Twitter</a>
     </div>
-
-    <!-- Música de fundo -->
-    <div class="audio-controls">
-      <audio id="bg-music" autoplay loop controls>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-        Seu navegador não suporta áudio HTML5.
-      </audio>
-    </div>
   </div>
+
+  <!-- Música de fundo lofi -->
+  <audio id="bg-music" autoplay loop>
+    <source src="https://files.freemusicarchive.org/storage-freemusicarchive-org/music/lofi_study/lofi_study_-_warm_lofi.mp3" type="audio/mpeg">
+    Seu navegador não suporta áudio HTML5.
+  </audio>
+
+  <!-- Botão flutuante de controle da música -->
+  <button id="music-toggle">⏸</button>
+
+  <script>
+    const music = document.getElementById('bg-music');
+    const toggleBtn = document.getElementById('music-toggle');
+
+    function updateIcon() {
+      toggleBtn.textContent = music.paused ? '▶️' : '⏸';
+    }
+
+    toggleBtn.addEventListener('click', () => {
+      if (music.paused) {
+        music.play();
+      } else {
+        music.pause();
+      }
+      updateIcon();
+    });
+
+    updateIcon();
+  </script>
 </body>
 </html>
