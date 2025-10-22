@@ -1,107 +1,78 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Calculadora de Munições</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Calculadora Simples — Munições</title>
   <style>
-    body {
-      background: #0d1117;
-      color: #f1f1f1;
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      height: 100vh;
-      padding: 20px;
+    :root{ --bg:#071022; --card:#0b1530; --accent:#06b6d4; --text:#e6eef8; --muted:#9fb1c8; }
+    *{box-sizing:border-box}
+    body{
+      margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+      font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      background:linear-gradient(180deg,#031022 0%, #071228 100%);
+      color:var(--text); padding:20px;
     }
-    h1 { margin-bottom: 15px; }
-    .container {
-      background: #161b22;
-      padding: 20px;
-      border-radius: 10px;
-      max-width: 400px;
-      width: 100%;
+    .card{
+      width:100%; max-width:720px; background:var(--card); border-radius:12px; padding:18px;
+      box-shadow:0 8px 30px rgba(0,0,0,0.6); border:1px solid rgba(255,255,255,0.03);
     }
-    label { display: block; margin-top: 10px; }
-    input {
-      width: 100%;
-      padding: 8px;
-      margin-top: 4px;
-      border: none;
-      border-radius: 6px;
-      background: #222c45;
-      color: #fff;
-      font-size: 15px;
+    h1{ margin:0 0 8px 0; font-size:18px; }
+    p.lead{ margin:0 0 14px 0; color:var(--muted); font-size:13px; }
+    .row{ display:flex; gap:12px; margin-bottom:10px; flex-wrap:wrap; }
+    label{ display:block; font-size:13px; color:var(--muted); margin-bottom:6px; }
+    input[type="number"]{
+      width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.04);
+      background:transparent; color:var(--text); font-size:15px;
     }
-    button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 15px;
-      background: #00bcd4;
-      color: #000;
-      font-weight: bold;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    .result {
-      margin-top: 15px;
-      padding: 10px;
-      background: #1b2433;
-      border-radius: 8px;
-      text-align: center;
-    }
-    .result p { margin: 5px 0; }
+    .col{ flex:1; min-width:160px; }
+    .actions{ display:flex; gap:8px; margin-top:10px; }
+    .btn{ background:var(--accent); color:#042028; padding:10px 12px; border-radius:8px; border:none; cursor:pointer; font-weight:700; }
+    .btn.secondary{ background:transparent; color:var(--text); border:1px solid rgba(255,255,255,0.04); }
+    .result{ margin-top:14px; padding:12px; border-radius:8px; background:rgba(255,255,255,0.02); }
+    .totals{ display:flex; gap:10px; margin-top:8px; flex-wrap:wrap; }
+    .tot{ flex:1; min-width:120px; padding:10px; border-radius:6px; background:rgba(255,255,255,0.01); text-align:center; }
+    .tot strong{ display:block; font-size:18px; margin-top:6px; }
+    .small{ color:var(--muted); font-size:13px; }
+    footer.small{ margin-top:10px; color:var(--muted); font-size:12px; text-align:right; }
   </style>
 </head>
 <body>
-  <h1>Calculadora de Munições</h1>
-  <div class="container">
-    <label>Munição de Fuzil</label>
-    <input type="number" id="fuzil" placeholder="Quantidade" />
+  <div class="card" role="region" aria-label="Calculadora simples de munições">
+    <h1>Calculadora simples</h1>
+    <p class="lead">Informe quantas unidades quer fabricar (base de receita: valores por 1000 unidades).</p>
 
-    <label>Munição de Sub</label>
-    <input type="number" id="sub" placeholder="Quantidade" />
+    <div class="row">
+      <div class="col">
+        <label for="fuzilQty">Munição de Fuzil — unidades</label>
+        <input id="fuzilQty" type="number" min="0" step="1" value="0" />
+      </div>
+      <div class="col">
+        <label for="subQty">Munição de Sub — unidades</label>
+        <input id="subQty" type="number" min="0" step="1" value="0" />
+      </div>
+      <div class="col">
+        <label for="pistolaQty">Munição de Pistola — unidades</label>
+        <input id="pistolaQty" type="number" min="0" step="1" value="0" />
+      </div>
+    </div>
 
-    <label>Munição de Pistola</label>
-    <input type="number" id="pistola" placeholder="Quantidade" />
+    <div class="row" style="margin-top:6px;">
+      <div class="col">
+        <label for="priceFuzil">Preço unitário — Fuzil</label>
+        <input id="priceFuzil" type="number" min="0" step="1" value="290" />
+      </div>
+      <div class="col">
+        <label for="priceSub">Preço unitário — Sub</label>
+        <input id="priceSub" type="number" min="0" step="1" value="250" />
+      </div>
+      <div class="col">
+        <label for="pricePistola">Preço unitário — Pistola</label>
+        <input id="pricePistola" type="number" min="0" step="1" value="150" />
+      </div>
+    </div>
 
-    <button onclick="calcular()">Calcular</button>
-
-    <div class="result" id="resultado"></div>
-  </div>
-
-  <script>
-    function calcular() {
-      const fuzil = parseFloat(document.getElementById('fuzil').value) || 0;
-      const sub = parseFloat(document.getElementById('sub').value) || 0;
-      const pistola = parseFloat(document.getElementById('pistola').value) || 0;
-
-      // Recursos por 1000 munições
-      const rec = {
-        fuzil: { cobre: 1000, alum: 1000, polvora: 267, preco: 290 },
-        sub:   { cobre: 500, alum: 500, polvora: 167, preco: 250 },
-        pistola: { cobre: 500, alum: 500, polvora: 100, preco: 150 }
-      };
-
-      // Cálculo proporcional de recursos (por unidade)
-      const cobre = (fuzil * rec.fuzil.cobre / 1000) + (sub * rec.sub.cobre / 1000) + (pistola * rec.pistola.cobre / 1000);
-      const alum = (fuzil * rec.fuzil.alum / 1000) + (sub * rec.sub.alum / 1000) + (pistola * rec.pistola.alum / 1000);
-      const polvora = (fuzil * rec.fuzil.polvora / 1000) + (sub * rec.sub.polvora / 1000) + (pistola * rec.pistola.polvora / 1000);
-
-      // Valor total por unidade
-      const valorTotal = (fuzil * rec.fuzil.preco) + (sub * rec.sub.preco) + (pistola * rec.pistola.preco);
-
-      document.getElementById('resultado').innerHTML = `
-        <p>🧱 Cobres: <strong>${Math.ceil(cobre)}</strong></p>
-        <p>🔩 Alumínios: <strong>${Math.ceil(alum)}</strong></p>
-        <p>💥 Pólvoras: <strong>${Math.ceil(polvora)}</strong></p>
-        <hr>
-        <p>💰 Valor total: <strong>R$ ${valorTotal.toLocaleString('pt-BR')}</strong></p>
-      `;
-    }
-  </script>
-</body>
-</html>
+    <div class="actions">
+      <button id="calcBtn" class="btn">Calcular</button>
+      <button id="clearBtn" class="btn secondary">Limpar</button>
+      <button id="copyBtn" class="btn secondary" style="margin-left:auto">Copiar resu
