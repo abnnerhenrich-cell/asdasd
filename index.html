@@ -1,432 +1,107 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Calculadora de Recursos e Valor — Jogo</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora de Munições</title>
   <style>
-    :root{
-      --bg:#0b1220; --card:#071022; --panel:#0e1a2b; --accent:#06b6d4; --accent2:#34d399;
-      --text:#e6eef8; --muted:#9fb1c8; --glass: rgba(255,255,255,0.03);
+    body {
+      background: #0d1117;
+      color: #f1f1f1;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      height: 100vh;
+      padding: 20px;
     }
-    *{box-sizing:border-box}
-    body{
-      margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
-      font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      background: linear-gradient(180deg,#031022 0%, #071228 100%);
-      color:var(--text); padding:28px;
+    h1 { margin-bottom: 15px; }
+    .container {
+      background: #161b22;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 400px;
+      width: 100%;
     }
-    .wrap{ width:100%; max-width:980px; }
-    header{ display:flex; align-items:center; gap:14px; margin-bottom:18px; }
-    header h1{ margin:0; font-size:20px; }
-    header p{ margin:0; color:var(--muted); font-size:13px; }
-    .card{
-      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border:1px solid rgba(255,255,255,0.03);
-      padding:18px; border-radius:12px; box-shadow:0 10px 30px rgba(2,6,23,0.6);
+    label { display: block; margin-top: 10px; }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      border: none;
+      border-radius: 6px;
+      background: #222c45;
+      color: #fff;
+      font-size: 15px;
     }
-    .grid{ display:grid; grid-template-columns: 1fr 360px; gap:16px; }
-    @media (max-width:900px){ .grid{ grid-template-columns: 1fr; } }
-    .left{ padding-right:6px; }
-    .ammo-row{ display:flex; gap:10px; align-items:center; margin-bottom:12px; }
-    .ammo-card{
-      background:var(--panel); padding:12px; border-radius:10px; flex:1; border:1px solid rgba(255,255,255,0.02);
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 15px;
+      background: #00bcd4;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
     }
-    label{ display:block; font-size:13px; color:var(--muted); margin-bottom:6px; }
-    input[type="number"]{
-      width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.04);
-      background:transparent; color:var(--text); font-size:15px;
+    .result {
+      margin-top: 15px;
+      padding: 10px;
+      background: #1b2433;
+      border-radius: 8px;
+      text-align: center;
     }
-    .small{ font-size:13px; color:var(--muted); }
-    .presets{ display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; }
-    .btn{ background:var(--accent); color:#042028; padding:8px 10px; border-radius:9px; border:none; cursor:pointer; font-weight:600; }
-    .btn-outline{ background:transparent; border:1px solid rgba(255,255,255,0.04); color:var(--text); padding:8px 10px; border-radius:9px; cursor:pointer; }
-    .controls{ display:flex; gap:8px; margin-top:10px; align-items:center; flex-wrap:wrap; }
-    .result{
-      background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
-      border-radius:10px; padding:14px; margin-bottom:12px; border:1px solid rgba(255,255,255,0.03);
-    }
-    .result h3{ margin:0 0 6px 0; font-size:16px; display:flex; align-items:center; gap:8px; }
-    .totals{ display:grid; grid-template-columns: repeat(3,1fr); gap:10px; margin-top:10px; }
-    .total-item{ background:rgba(255,255,255,0.02); padding:8px; border-radius:8px; text-align:center; }
-    .total-item strong{ display:block; font-size:18px; }
-    footer{ margin-top:10px; color:var(--muted); font-size:13px; display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; }
-    .toggle{ display:flex; gap:8px; align-items:center; }
-    .copy-btn{ background:var(--accent2); color:#042018; padding:8px 10px; border-radius:9px; border:none; cursor:pointer; font-weight:700; }
-    .note{ margin-top:8px; color:var(--muted); font-size:13px; }
-    /* Nova seção de valor */
-    .price-card{ margin-top:14px; background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005)); padding:12px; border-radius:10px; border:1px solid rgba(255,255,255,0.02); }
-    .price-row{ display:flex; gap:8px; align-items:center; margin-bottom:8px; }
-    .price-row input[type="number"]{ max-width:120px; }
-    .price-totals{ margin-top:10px; display:grid; grid-template-columns: 1fr 1fr; gap:8px; }
-    .price-item{ background:rgba(255,255,255,0.02); padding:10px; border-radius:8px; text-align:left; }
-    .muted-italic{ color:var(--muted); font-size:13px; font-style:italic; }
+    .result p { margin: 5px 0; }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div>
-        <h1>Calculadora de Recursos e Valor — Jogo</h1>
-        <p class="small">Insira quantas munições quer fabricar e obtenha recursos necessários e o custo total (preços por unidade).</p>
-      </div>
-    </header>
+  <h1>Calculadora de Munições</h1>
+  <div class="container">
+    <label>Munição de Fuzil</label>
+    <input type="number" id="fuzil" placeholder="Quantidade" />
 
-    <div class="card grid">
-      <div class="left">
-        <!-- AMMO: Fuzil -->
-        <div class="ammo-row">
-          <div class="ammo-card">
-            <label>🔫 Munição de Fuzil (por 1000 = 1000 Cobres, 1000 Alumínios, 267 Pólvoras)</label>
-            <input id="fuzilQty" type="number" min="0" step="1" value="0" />
-            <div class="presets small" style="margin-top:8px">
-              <button class="btn-outline" data-target="fuzil" data-value="1">+1</button>
-              <button class="btn-outline" data-target="fuzil" data-value="10">+10</button>
-              <button class="btn-outline" data-target="fuzil" data-value="100">+100</button>
-              <button class="btn-outline" data-target="fuzil" data-value="1000">+1000</button>
-            </div>
-          </div>
-        </div>
+    <label>Munição de Sub</label>
+    <input type="number" id="sub" placeholder="Quantidade" />
 
-        <!-- AMMO: Sub -->
-        <div class="ammo-row">
-          <div class="ammo-card">
-            <label>🔩 Munição de Sub (por 1000 = 500 Cobres, 500 Alumínios, 167 Pólvoras)</label>
-            <input id="subQty" type="number" min="0" step="1" value="0" />
-            <div class="presets small" style="margin-top:8px">
-              <button class="btn-outline" data-target="sub" data-value="1">+1</button>
-              <button class="btn-outline" data-target="sub" data-value="10">+10</button>
-              <button class="btn-outline" data-target="sub" data-value="100">+100</button>
-              <button class="btn-outline" data-target="sub" data-value="1000">+1000</button>
-            </div>
-          </div>
-        </div>
+    <label>Munição de Pistola</label>
+    <input type="number" id="pistola" placeholder="Quantidade" />
 
-        <!-- AMMO: Pistola -->
-        <div class="ammo-row">
-          <div class="ammo-card">
-            <label>🔸 Munição de Pistola (por 1000 = 500 Cobres, 500 Alumínios, 100 Pólvoras)</label>
-            <input id="pistolaQty" type="number" min="0" step="1" value="0" />
-            <div class="presets small" style="margin-top:8px">
-              <button class="btn-outline" data-target="pistola" data-value="1">+1</button>
-              <button class="btn-outline" data-target="pistola" data-value="10">+10</button>
-              <button class="btn-outline" data-target="pistola" data-value="100">+100</button>
-              <button class="btn-outline" data-target="pistola" data-value="1000">+1000</button>
-            </div>
-          </div>
-        </div>
+    <button onclick="calcular()">Calcular</button>
 
-        <div class="controls">
-          <button id="calcBtn" class="btn">Calcular</button>
-          <button id="clearBtn" class="btn-outline">Limpar</button>
-
-          <label style="margin-left:6px;" class="small">
-            <input id="ceilToggle" type="checkbox" checked /> Arredondar recursos para cima (inteiros)
-          </label>
-
-          <div style="margin-left:auto;">
-            <button id="copyBtn" class="copy-btn">Copiar resumo</button>
-          </div>
-        </div>
-
-        <p class="note">Dica: deixe o "Arredondar" ativado se no seu jogo recursos não podem ser fracionários.</p>
-
-        <!-- SEÇÃO: Calculador de Valor -->
-        <div class="price-card">
-          <h3 style="margin:0 0 8px 0;">Calculador de Valor (preços por unidade)</h3>
-          <div class="price-row">
-            <label style="flex:1">
-              <div class="small">Preço unitário - Munição de Fuzil</div>
-              <input id="priceFuzil" type="number" min="0" step="1" value="290" />
-            </label>
-            <label style="flex:1">
-              <div class="small">Preço unitário - Munição de Sub</div>
-              <input id="priceSub" type="number" min="0" step="1" value="250" />
-            </label>
-            <label style="flex:1">
-              <div class="small">Preço unitário - Munição de Pistola</div>
-              <input id="pricePistola" type="number" min="0" step="1" value="150" />
-            </label>
-          </div>
-
-          <div style="display:flex; gap:8px; align-items:center; margin-top:8px;">
-            <button id="calcPriceBtn" class="btn">Calcular Valor</button>
-            <button id="resetPriceBtn" class="btn-outline">Resetar Preços</button>
-            <div class="muted-italic" style="margin-left:auto;">Os preços podem ser alterados para simular mercado do jogo.</div>
-          </div>
-
-          <div class="price-totals" id="priceTotals" style="margin-top:10px;">
-            <div class="price-item">
-              <div class="small">Custo por tipo</div>
-              <div id="costFuzil" style="font-weight:700; margin-top:6px;">R$ 0</div>
-              <div class="small" id="costFuzilDetail"></div>
-            </div>
-            <div class="price-item">
-              <div class="small">Custo total geral</div>
-              <div id="grandTotal" style="font-weight:900; font-size:18px; margin-top:6px;">R$ 0</div>
-              <div class="small" id="grandDetail"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <aside>
-        <div class="result" id="resultPanel">
-          <h3>Resumo rápido</h3>
-          <div id="breakdown">
-            <p class="small">Nenhuma quantidade calculada ainda.</p>
-          </div>
-
-          <div style="margin-top:12px">
-            <strong class="small">Totais de recursos</strong>
-            <div class="totals" id="totalsGrid">
-              <div class="total-item">
-                <div class="small">Cobres</div>
-                <strong id="totalCobre">0</strong>
-              </div>
-              <div class="total-item">
-                <div class="small">Alumínios</div>
-                <strong id="totalAlum">0</strong>
-              </div>
-              <div class="total-item">
-                <div class="small">Pólvoras</div>
-                <strong id="totalPulv">0</strong>
-              </div>
-            </div>
-          </div>
-
-          <footer>
-            <div class="small">Base: valores por 1000 unidades (configurados no script).</div>
-            <div class="small">Formato: inteiro se "Arredondar" ativo.</div>
-          </footer>
-        </div>
-      </aside>
-    </div>
+    <div class="result" id="resultado"></div>
   </div>
 
   <script>
-    // Receitas por 1000 unidades (dados do usuário)
-    const RECIPES = {
-      fuzil: { cobre: 1000, alum: 1000, pul: 267, label: 'Munição de Fuzil' },
-      sub:   { cobre: 500,  alum: 500,  pul: 167, label: 'Munição de Sub' },
-      pistola:{ cobre:500,  alum: 500,  pul: 100, label: 'Munição de Pistola' }
-    };
+    function calcular() {
+      const fuzil = parseFloat(document.getElementById('fuzil').value) || 0;
+      const sub = parseFloat(document.getElementById('sub').value) || 0;
+      const pistola = parseFloat(document.getElementById('pistola').value) || 0;
 
-    // PREÇOS (inicializados conforme solicitado)
-    // Esses campos são editáveis na UI, com valores iniciais:
-    // Fuzil = 290, Sub = 250, Pistola = 150
-    const priceInputs = {
-      fuzil: document.getElementById('priceFuzil'),
-      sub: document.getElementById('priceSub'),
-      pistola: document.getElementById('pricePistola')
-    };
-
-    // Helper: calcula por quantidade dada, usando regra direta (por 1000)
-    function calcFor(recipe, qty, roundUp){
-      const factor = qty / 1000;
-      const raw = {
-        cobre: recipe.cobre * factor,
-        alum: recipe.alum * factor,
-        pul: recipe.pul * factor
+      // Recursos por 1000 munições
+      const rec = {
+        fuzil: { cobre: 1000, alum: 1000, polvora: 267, preco: 290 },
+        sub:   { cobre: 500, alum: 500, polvora: 167, preco: 250 },
+        pistola: { cobre: 500, alum: 500, polvora: 100, preco: 150 }
       };
-      if(roundUp){
-        return {
-          cobre: Math.ceil(raw.cobre),
-          alum: Math.ceil(raw.alum),
-          pul: Math.ceil(raw.pul)
-        };
-      } else {
-        return {
-          cobre: +(raw.cobre.toFixed(2)),
-          alum: +(raw.alum.toFixed(2)),
-          pul: +(raw.pul.toFixed(2))
-        };
-      }
-    }
 
-    // DOM
-    const fuzilQty = document.getElementById('fuzilQty');
-    const subQty = document.getElementById('subQty');
-    const pistolaQty = document.getElementById('pistolaQty');
-    const calcBtn = document.getElementById('calcBtn');
-    const clearBtn = document.getElementById('clearBtn');
-    const ceilToggle = document.getElementById('ceilToggle');
-    const breakdown = document.getElementById('breakdown');
-    const totalCobre = document.getElementById('totalCobre');
-    const totalAlum = document.getElementById('totalAlum');
-    const totalPulv = document.getElementById('totalPulv');
-    const copyBtn = document.getElementById('copyBtn');
+      // Cálculo proporcional de recursos (por unidade)
+      const cobre = (fuzil * rec.fuzil.cobre / 1000) + (sub * rec.sub.cobre / 1000) + (pistola * rec.pistola.cobre / 1000);
+      const alum = (fuzil * rec.fuzil.alum / 1000) + (sub * rec.sub.alum / 1000) + (pistola * rec.pistola.alum / 1000);
+      const polvora = (fuzil * rec.fuzil.polvora / 1000) + (sub * rec.sub.polvora / 1000) + (pistola * rec.pistola.polvora / 1000);
 
-    // Price DOM
-    const calcPriceBtn = document.getElementById('calcPriceBtn');
-    const resetPriceBtn = document.getElementById('resetPriceBtn');
-    const costFuzil = document.getElementById('costFuzil');
-    const costFuzilDetail = document.getElementById('costFuzilDetail');
-    const grandTotal = document.getElementById('grandTotal');
-    const grandDetail = document.getElementById('grandDetail');
+      // Valor total por unidade
+      const valorTotal = (fuzil * rec.fuzil.preco) + (sub * rec.sub.preco) + (pistola * rec.pistola.preco);
 
-    // Preset buttons (quantidades)
-    document.querySelectorAll('.btn-outline[data-target]').forEach(btn=>{
-      btn.addEventListener('click', ()=> {
-        const target = btn.dataset.target;
-        const value = parseInt(btn.dataset.value,10);
-        if(target === 'fuzil'){
-          fuzilQty.value = Number(fuzilQty.value || 0) + value;
-        } else if(target === 'sub'){
-          subQty.value = Number(subQty.value || 0) + value;
-        } else if(target === 'pistola'){
-          pistolaQty.value = Number(pistolaQty.value || 0) + value;
-        }
-      });
-    });
-
-    // Função principal de cálculo de recursos
-    function performCalc(){
-      const qF = Math.max(0, Math.floor(Number(fuzilQty.value) || 0));
-      const qS = Math.max(0, Math.floor(Number(subQty.value) || 0));
-      const qP = Math.max(0, Math.floor(Number(pistolaQty.value) || 0));
-      const roundUp = !!ceilToggle.checked;
-
-      // calcular recursos por tipo
-      const rF = calcFor(RECIPES.fuzil, qF, roundUp);
-      const rS = calcFor(RECIPES.sub, qS, roundUp);
-      const rP = calcFor(RECIPES.pistola, qP, roundUp);
-
-      // Somar totais
-      const sumCobre = (rF.cobre + rS.cobre + rP.cobre);
-      const sumAlum  = (rF.alum + rS.alum + rP.alum);
-      const sumPulv  = (rF.pul + rS.pul + rP.pul);
-
-      // Mostrar detalhe
-      breakdown.innerHTML = `
-        <div class="small"><strong>Detalhes por tipo</strong></div>
-        <div style="margin-top:8px;">
-          <div style="margin-bottom:6px;"><strong>${RECIPES.fuzil.label}:</strong> ${qF} unidades → Cobres ${rF.cobre}, Alumínios ${rF.alum}, Pólvoras ${rF.pul}</div>
-          <div style="margin-bottom:6px;"><strong>${RECIPES.sub.label}:</strong> ${qS} unidades → Cobres ${rS.cobre}, Alumínios ${rS.alum}, Pólvoras ${rS.pul}</div>
-          <div style="margin-bottom:6px;"><strong>${RECIPES.pistola.label}:</strong> ${qP} unidades → Cobres ${rP.cobre}, Alumínios ${rP.alum}, Pólvoras ${rP.pul}</div>
-        </div>
+      document.getElementById('resultado').innerHTML = `
+        <p>🧱 Cobres: <strong>${Math.ceil(cobre)}</strong></p>
+        <p>🔩 Alumínios: <strong>${Math.ceil(alum)}</strong></p>
+        <p>💥 Pólvoras: <strong>${Math.ceil(polvora)}</strong></p>
+        <hr>
+        <p>💰 Valor total: <strong>R$ ${valorTotal.toLocaleString('pt-BR')}</strong></p>
       `;
-
-      // Totais (exibir como integer se roundUp)
-      totalCobre.textContent = (roundUp ? Math.ceil(sumCobre) : sumCobre);
-      totalAlum.textContent  = (roundUp ? Math.ceil(sumAlum)  : sumAlum);
-      totalPulv.textContent  = (roundUp ? Math.ceil(sumPulv)  : sumPulv);
-
-      // também atualiza cálculo de preço se já houver valores
-      computePrice(qF,qS,qP);
     }
-
-    // Cálculo de preço: usa preços unitários * quantidade (preço configurável)
-    function computePrice(qF=null, qS=null, qP=null){
-      // se quantidades não foram passadas, lê das inputs
-      qF = qF === null ? Math.max(0, Math.floor(Number(fuzilQty.value) || 0)) : qF;
-      qS = qS === null ? Math.max(0, Math.floor(Number(subQty.value) || 0)) : qS;
-      qP = qP === null ? Math.max(0, Math.floor(Number(pistolaQty.value) || 0)) : qP;
-
-      const pF = Number(priceInputs.fuzil.value) || 0;
-      const pS = Number(priceInputs.sub.value) || 0;
-      const pP = Number(priceInputs.pistola.value) || 0;
-
-      const costF = qF * pF;
-      const costS = qS * pS;
-      const costP = qP * pP;
-
-      const grand = costF + costS + costP;
-
-      // Formata em "R$" simples com separador de milhares
-      function money(v){
-        return 'R$ ' + v.toLocaleString('pt-BR');
-      }
-
-      costFuzil.textContent = money(costF);
-      costFuzilDetail.textContent = `${qF} × ${pF.toLocaleString('pt-BR')} = ${money(costF)}`;
-
-      // detalhe grand total
-      grandTotal.textContent = money(grand);
-      grandDetail.textContent = `${qF}×${pF.toLocaleString('pt-BR')} + ${qS}×${pS.toLocaleString('pt-BR')} + ${qP}×${pP.toLocaleString('pt-BR')} = ${money(grand)}`;
-
-      return { costF, costS, costP, grand };
-    }
-
-    // Eventos
-    calcBtn.addEventListener('click', performCalc);
-
-    clearBtn.addEventListener('click', ()=>{
-      fuzilQty.value = 0;
-      subQty.value = 0;
-      pistolaQty.value = 0;
-      ceilToggle.checked = true;
-      breakdown.innerHTML = '<p class="small">Nenhuma quantidade calculada ainda.</p>';
-      totalCobre.textContent = '0';
-      totalAlum.textContent = '0';
-      totalPulv.textContent = '0';
-      // zerar preços visuais (mas não os inputs)
-      costFuzil.textContent = 'R$ 0';
-      costFuzilDetail.textContent = '';
-      grandTotal.textContent = 'R$ 0';
-      grandDetail.textContent = '';
-    });
-
-    copyBtn.addEventListener('click', ()=>{
-      const qF = Math.max(0, Math.floor(Number(fuzilQty.value) || 0));
-      const qS = Math.max(0, Math.floor(Number(subQty.value) || 0));
-      const qP = Math.max(0, Math.floor(Number(pistolaQty.value) || 0));
-      const roundUp = !!ceilToggle.checked;
-
-      const rF = calcFor(RECIPES.fuzil, qF, roundUp);
-      const rS = calcFor(RECIPES.sub, qS, roundUp);
-      const rP = calcFor(RECIPES.pistola, qP, roundUp);
-
-      const priceRes = computePrice(qF,qS,qP);
-
-      const text = [
-        '=== Resumo de fabricação (Jogo) ===',
-        `${RECIPES.fuzil.label}: ${qF} unidades → Cobre ${rF.cobre}, Alumínio ${rF.alum}, Pólvora ${rF.pul}`,
-        `${RECIPES.sub.label}: ${qS} unidades → Cobre ${rS.cobre}, Alumínio ${rS.alum}, Pólvora ${rS.pul}`,
-        `${RECIPES.pistola.label}: ${qP} unidades → Cobre ${rP.cobre}, Alumínio ${rP.alum}, Pólvora ${rP.pul}`,
-        '----------------------------------',
-        `Totais → Cobres: ${roundUp ? Math.ceil(rF.cobre + rS.cobre + rP.cobre) : (rF.cobre + rS.cobre + rP.cobre)}, Alumínios: ${roundUp ? Math.ceil(rF.alum + rS.alum + rP.alum) : (rF.alum + rS.alum + rP.alum)}, Pólvoras: ${roundUp ? Math.ceil(rF.pul + rS.pul + rP.pul) : (rF.pul + rS.pul + rP.pul)}`,
-        '--- CUSTOS ---',
-        `Preço unitário: Fuzil ${Number(priceInputs.fuzil.value || 0)}, Sub ${Number(priceInputs.sub.value || 0)}, Pistola ${Number(priceInputs.pistola.value || 0)}`,
-        `Custos por tipo: Fuzil R$ ${priceRes.costF.toLocaleString('pt-BR')}, Sub R$ ${priceRes.costS.toLocaleString('pt-BR')}, Pistola R$ ${priceRes.costP.toLocaleString('pt-BR')}`,
-        `Total geral: R$ ${priceRes.grand.toLocaleString('pt-BR')}`,
-        '(Base: valores por 1000 unidades)'
-      ].join('\\n');
-
-      navigator.clipboard?.writeText(text).then(()=>{
-        copyBtn.textContent = 'Copiado!';
-        setTimeout(()=> copyBtn.textContent = 'Copiar resumo', 1400);
-      }).catch(()=> {
-        alert('Copiar falhou — selecione e copie manualmente:\\n\\n' + text);
-      });
-    });
-
-    // Price calc button
-    calcPriceBtn.addEventListener('click', ()=>{
-      const qF = Math.max(0, Math.floor(Number(fuzilQty.value) || 0));
-      const qS = Math.max(0, Math.floor(Number(subQty.value) || 0));
-      const qP = Math.max(0, Math.floor(Number(pistolaQty.value) || 0));
-      computePrice(qF,qS,qP);
-    });
-
-    // Reset price inputs to defaults
-    resetPriceBtn.addEventListener('click', ()=>{
-      priceInputs.fuzil.value = 290;
-      priceInputs.sub.value = 250;
-      priceInputs.pistola.value = 150;
-      // recalcula usando os preços resetados
-      calcPriceBtn.click();
-    });
-
-    // calcular ao pressionar Enter nas quantidades
-    [fuzilQty, subQty, pistolaQty].forEach(inp=>{
-      inp.addEventListener('keydown', (e)=>{
-        if(e.key === 'Enter'){ performCalc(); }
-      });
-    });
-
-    // Inicial
-    performCalc();
   </script>
 </body>
 </html>
