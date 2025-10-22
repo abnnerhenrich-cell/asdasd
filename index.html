@@ -3,96 +3,266 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Calculadora mínima — Munições</title>
+  <title>Calculadora — Munições, Recursos e Valor</title>
   <style>
-    :root{ --bg:#071228; --card:#0b1530; --accent:#06b6d4; --text:#e6eef8; --muted:#9fb1c8; }
+    :root{
+      --bg:#071228; --card:#0b1530; --accent:#06b6d4; --text:#e6eef8; --muted:#9fb1c8;
+      --accent2:#34d399;
+    }
     *{box-sizing:border-box}
     body{
       margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
       font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
-      background:linear-gradient(180deg,#031022 0%, #071228 100%);
-      color:var(--text);
-      padding:20px;
+      background:linear-gradient(180deg,#031022 0%, #071228 100%); color:var(--text); padding:20px;
     }
-    .wrap{ width:100%; max-width:520px; }
-    .grid{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:14px; }
-    @media (max-width:640px){ .grid{ grid-template-columns:1fr; } }
+    .wrap{ width:100%; max-width:920px; }
+    .grid-top{ display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px; margin-bottom:14px; }
+    @media (max-width:820px){ .grid-top{ grid-template-columns:1fr; } }
     .panel{
       background:var(--card); border-radius:10px; padding:12px; text-align:center;
       border:1px solid rgba(255,255,255,0.03);
     }
     .panel h2{ margin:0 0 8px 0; font-size:14px; font-weight:700; }
-    .panel input{ width:100%; padding:8px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:var(--text); font-size:15px; }
-    .calc{
-      background:rgba(255,255,255,0.02); padding:12px; border-radius:10px; display:flex; gap:8px; align-items:center;
+    .panel .priceTag{ font-size:13px; color:var(--muted); margin-bottom:8px; }
+    .panel input[type="number"]{
+      width:100%; padding:8px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.04);
+      background:transparent; color:var(--text); font-size:15px;
     }
-    .calc input{ flex:1; padding:10px; font-size:15px; border-radius:8px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:var(--text); }
+    .controls{ display:flex; gap:8px; margin-top:12px; align-items:center; }
     .btn{ background:var(--accent); color:#042028; padding:10px 12px; border-radius:8px; border:none; cursor:pointer; font-weight:700; }
-    .result{ margin-top:10px; text-align:center; font-weight:800; font-size:16px; }
-    .small{ font-size:13px; color:var(--muted); margin-top:8px; text-align:center; }
+    .btn.secondary{ background:transparent; color:var(--text); border:1px solid rgba(255,255,255,0.04); }
+    .resultRow{ display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-top:12px; }
+    @media (max-width:820px){ .resultRow{ grid-template-columns:1fr; } }
+    .cardSmall{ background:rgba(255,255,255,0.02); padding:12px; border-radius:8px; text-align:left; }
+    .cardSmall h3{ margin:0 0 8px 0; font-size:14px; }
+    .totals{ display:flex; gap:8px; flex-wrap:wrap; }
+    .tot{ flex:1; min-width:120px; padding:8px; border-radius:6px; background:rgba(255,255,255,0.01); text-align:center; }
+    .tot strong{ display:block; font-size:18px; margin-top:6px; }
+    .small{ color:var(--muted); font-size:13px; }
+    .mutedItalic{ color:var(--muted); font-style:italic; font-size:13px; margin-top:8px; }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="grid" aria-hidden="false">
-      <div class="panel" id="panelFuzil" aria-label="Munição de fuzil">
+  <div class="wrap" role="main" aria-label="Calculadora de munições, recursos e valor">
+    <div class="grid-top" aria-hidden="false">
+      <!-- Fuzil -->
+      <div class="panel" id="panelFuzil">
         <h2>Munição de Fuzil</h2>
-        <input id="fuzilQty" type="number" min="0" step="1" value="0" />
+        <div class="priceTag">Preço unitário: <strong>R$ 290</strong></div>
+        <input id="fuzilQty" type="number" min="0" step="1" value="0" aria-label="Quantidade de munição de fuzil" />
       </div>
 
-      <div class="panel" id="panelSub" aria-label="Munição de sub">
+      <!-- Sub -->
+      <div class="panel" id="panelSub">
         <h2>Munição de Sub</h2>
-        <input id="subQty" type="number" min="0" step="1" value="0" />
+        <div class="priceTag">Preço unitário: <strong>R$ 250</strong></div>
+        <input id="subQty" type="number" min="0" step="1" value="0" aria-label="Quantidade de munição de sub" />
       </div>
 
-      <div class="panel" id="panelPistola" aria-label="Munição de pistola">
+      <!-- Pistola -->
+      <div class="panel" id="panelPistola">
         <h2>Munição de Pistola</h2>
-        <input id="pistolaQty" type="number" min="0" step="1" value="0" />
+        <div class="priceTag">Preço unitário: <strong>R$ 150</strong></div>
+        <input id="pistolaQty" type="number" min="0" step="1" value="0" aria-label="Quantidade de munição de pistola" />
       </div>
     </div>
 
-    <div class="panel calc" aria-label="Painel de cálculo simples">
-      <input id="unitPrice" type="number" min="0" step="0.01" placeholder="Insira o valor (preço unitário)" />
+    <!-- Controles -->
+    <div class="controls">
       <button id="calcBtn" class="btn">Calcular</button>
+      <button id="clearBtn" class="btn secondary">Limpar</button>
+      <div style="margin-left:auto" class="small">Preços fixos: Fuzil 290 — Sub 250 — Pistola 150</div>
     </div>
 
-    <div class="result" id="result">R$ 0,00</div>
-    <div class="small">O total é: (quantidade total) × (valor que você inseriu)</div>
+    <!-- Resultados -->
+    <div class="resultRow">
+      <!-- Recursos -->
+      <div class="cardSmall" aria-live="polite">
+        <h3>Recursos necessários</h3>
+        <div class="small">Base por 1000 unidades:</div>
+        <ul class="small" style="margin:8px 0 10px 18px; color:var(--muted)">
+          <li>Fuzil → 1000 Cobres, 1000 Alumínios, 267 Pólvoras</li>
+          <li>Sub → 500 Cobres, 500 Alumínios, 167 Pólvoras</li>
+          <li>Pistola → 500 Cobres, 500 Alumínios, 100 Pólvoras</li>
+        </ul>
+
+        <div class="totals" id="resourceTotals">
+          <div style="flex:1">
+            <div class="small">Cobres (exato)</div>
+            <strong id="cobreExact">0</strong>
+            <div class="small mutedItalic">Arredondado ↑</div>
+            <div class="small"><strong id="cobreRound">0</strong></div>
+          </div>
+          <div style="flex:1">
+            <div class="small">Alumínios (exato)</div>
+            <strong id="alumExact">0</strong>
+            <div class="small mutedItalic">Arredondado ↑</div>
+            <div class="small"><strong id="alumRound">0</strong></div>
+          </div>
+          <div style="flex:1">
+            <div class="small">Pólvoras (exato)</div>
+            <strong id="pulvExact">0</strong>
+            <div class="small mutedItalic">Arredondado ↑</div>
+            <div class="small"><strong id="pulvRound">0</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Valores -->
+      <div class="cardSmall" aria-live="polite">
+        <h3>Calculador de valor</h3>
+        <div class="small">Preços fixos por unidade (não editáveis)</div>
+
+        <div style="margin-top:10px">
+          <div class="small">Fuzil: <strong>R$ 290</strong></div>
+          <div class="small">Sub: <strong>R$ 250</strong></div>
+          <div class="small">Pistola: <strong>R$ 150</strong></div>
+        </div>
+
+        <div style="margin-top:12px">
+          <div class="small">Custos por tipo</div>
+          <div class="totals" style="margin-top:8px;">
+            <div class="tot">
+              <div class="small">Fuzil</div>
+              <strong id="costFuzil">R$ 0</strong>
+              <div class="small" id="detailFuzil"></div>
+            </div>
+            <div class="tot">
+              <div class="small">Sub</div>
+              <strong id="costSub">R$ 0</strong>
+              <div class="small" id="detailSub"></div>
+            </div>
+            <div class="tot">
+              <div class="small">Pistola</div>
+              <strong id="costPistola">R$ 0</strong>
+              <div class="small" id="detailPistola"></div>
+            </div>
+          </div>
+
+          <div style="margin-top:12px; text-align:center;">
+            <div class="small">Total geral</div>
+            <strong id="grandTotal" style="font-size:18px; margin-top:6px;">R$ 0</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mutedItalic" style="margin-top:12px;">Mostramos valores exatos (com 2 casas) e, abaixo, a versão arredondada para cima (inteira) para cada recurso.</div>
   </div>
 
   <script>
+    // RECEITAS por 1000 unidades (fornecidas)
+    const RECIPES = {
+      fuzil: { cobre: 1000, alum: 1000, pul: 267, label: 'Fuzil', price: 290 },
+      sub:   { cobre: 500,  alum: 500,  pul: 167, label: 'Sub',   price: 250 },
+      pistola:{ cobre:500,  alum: 500,  pul: 100, label: 'Pistola', price: 150 }
+    };
+
+    // DOM
     const fuzilQty = document.getElementById('fuzilQty');
     const subQty = document.getElementById('subQty');
     const pistolaQty = document.getElementById('pistolaQty');
-    const unitPrice = document.getElementById('unitPrice');
     const calcBtn = document.getElementById('calcBtn');
-    const result = document.getElementById('result');
+    const clearBtn = document.getElementById('clearBtn');
 
+    const cobreExact = document.getElementById('cobreExact');
+    const alumExact = document.getElementById('alumExact');
+    const pulvExact = document.getElementById('pulvExact');
+    const cobreRound = document.getElementById('cobreRound');
+    const alumRound = document.getElementById('alumRound');
+    const pulvRound = document.getElementById('pulvRound');
+
+    const costFuzil = document.getElementById('costFuzil');
+    const costSub = document.getElementById('costSub');
+    const costPistola = document.getElementById('costPistola');
+    const detailFuzil = document.getElementById('detailFuzil');
+    const detailSub = document.getElementById('detailSub');
+    const detailPistola = document.getElementById('detailPistola');
+    const grandTotal = document.getElementById('grandTotal');
+
+    // Helper: money BR
     function moneyBR(v){
       return 'R$ ' + Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
     }
 
-    function calcularTotal(){
+    // Calcula recursos com fator qty/1000
+    function calcResources(qF, qS, qP){
+      function forRecipe(r, q){
+        const factor = q / 1000;
+        return {
+          cobre: +(r.cobre * factor).toFixed(2),
+          alum:  +(r.alum * factor).toFixed(2),
+          pul:   +(r.pul * factor).toFixed(2)
+        };
+      }
+      const rF = forRecipe(RECIPES.fuzil, qF);
+      const rS = forRecipe(RECIPES.sub, qS);
+      const rP = forRecipe(RECIPES.pistola, qP);
+
+      const sumCobre = +(rF.cobre + rS.cobre + rP.cobre).toFixed(2);
+      const sumAlum  = +(rF.alum  + rS.alum  + rP.alum).toFixed(2);
+      const sumPulv  = +(rF.pul   + rS.pul   + rP.pul).toFixed(2);
+
+      return {
+        exact: { cobre: sumCobre, alum: sumAlum, pul: sumPulv },
+        roundUp: { cobre: Math.ceil(sumCobre), alum: Math.ceil(sumAlum), pul: Math.ceil(sumPulv) }
+      };
+    }
+
+    // Calcula valores monetários (preços fixos)
+    function calcValues(qF, qS, qP){
+      const costF = qF * RECIPES.fuzil.price;
+      const costS = qS * RECIPES.sub.price;
+      const costP = qP * RECIPES.pistola.price;
+      const grand = costF + costS + costP;
+      return { costF, costS, costP, grand };
+    }
+
+    function performCalc(){
       const qF = Math.max(0, Math.floor(Number(fuzilQty.value) || 0));
       const qS = Math.max(0, Math.floor(Number(subQty.value) || 0));
       const qP = Math.max(0, Math.floor(Number(pistolaQty.value) || 0));
-      const preco = Number(unitPrice.value) || 0;
 
-      const totalUnidades = qF + qS + qP;
-      const totalReais = totalUnidades * preco;
+      // Recursos
+      const resources = calcResources(qF, qS, qP);
+      cobreExact.textContent = resources.exact.cobre.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+      alumExact.textContent  = resources.exact.alum.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+      pulvExact.textContent  = resources.exact.pul.toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
 
-      result.textContent = moneyBR(totalReais);
+      cobreRound.textContent = resources.roundUp.cobre.toLocaleString('pt-BR');
+      alumRound.textContent  = resources.roundUp.alum.toLocaleString('pt-BR');
+      pulvRound.textContent  = resources.roundUp.pul.toLocaleString('pt-BR');
+
+      // Valores monetários
+      const vals = calcValues(qF,qS,qP);
+      costFuzil.textContent = moneyBR(vals.costF);
+      costSub.textContent = moneyBR(vals.costS);
+      costPistola.textContent = moneyBR(vals.costP);
+      detailFuzil.textContent = `${qF} × ${RECIPES.fuzil.price.toLocaleString('pt-BR')} = ${moneyBR(vals.costF)}`;
+      detailSub.textContent = `${qS} × ${RECIPES.sub.price.toLocaleString('pt-BR')} = ${moneyBR(vals.costS)}`;
+      detailPistola.textContent = `${qP} × ${RECIPES.pistola.price.toLocaleString('pt-BR')} = ${moneyBR(vals.costP)}`;
+      grandTotal.textContent = moneyBR(vals.grand);
     }
 
-    calcBtn.addEventListener('click', calcularTotal);
+    calcBtn.addEventListener('click', performCalc);
 
-    // permite Enter para calcular
-    [fuzilQty, subQty, pistolaQty, unitPrice].forEach(inp=>{
-      inp.addEventListener('keydown', (e)=> { if(e.key === 'Enter') calcularTotal(); });
+    clearBtn.addEventListener('click', ()=>{
+      fuzilQty.value = 0; subQty.value = 0; pistolaQty.value = 0;
+      // reset displays
+      cobreExact.textContent = '0'; alumExact.textContent = '0'; pulvExact.textContent = '0';
+      cobreRound.textContent = '0'; alumRound.textContent = '0'; pulvRound.textContent = '0';
+      costFuzil.textContent = 'R$ 0'; costSub.textContent = 'R$ 0'; costPistola.textContent = 'R$ 0';
+      detailFuzil.textContent = ''; detailSub.textContent = ''; detailPistola.textContent = '';
+      grandTotal.textContent = 'R$ 0';
     });
 
-    // estado inicial
-    calcularTotal();
+    // Enter para calcular
+    [fuzilQty, subQty, pistolaQty].forEach(inp=>{
+      inp.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') performCalc(); });
+    });
+
+    // cálculo inicial
+    performCalc();
   </script>
 </body>
 </html>
