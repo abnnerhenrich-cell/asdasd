@@ -3,76 +3,96 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Calculadora Simples — Munições</title>
+  <title>Calculadora mínima — Munições</title>
   <style>
-    :root{ --bg:#071022; --card:#0b1530; --accent:#06b6d4; --text:#e6eef8; --muted:#9fb1c8; }
+    :root{ --bg:#071228; --card:#0b1530; --accent:#06b6d4; --text:#e6eef8; --muted:#9fb1c8; }
     *{box-sizing:border-box}
     body{
       margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
       font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
       background:linear-gradient(180deg,#031022 0%, #071228 100%);
-      color:var(--text); padding:20px;
+      color:var(--text);
+      padding:20px;
     }
-    .card{
-      width:100%; max-width:720px; background:var(--card); border-radius:12px; padding:18px;
-      box-shadow:0 8px 30px rgba(0,0,0,0.6); border:1px solid rgba(255,255,255,0.03);
+    .wrap{ width:100%; max-width:520px; }
+    .grid{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:14px; }
+    @media (max-width:640px){ .grid{ grid-template-columns:1fr; } }
+    .panel{
+      background:var(--card); border-radius:10px; padding:12px; text-align:center;
+      border:1px solid rgba(255,255,255,0.03);
     }
-    h1{ margin:0 0 8px 0; font-size:18px; }
-    p.lead{ margin:0 0 14px 0; color:var(--muted); font-size:13px; }
-    .row{ display:flex; gap:12px; margin-bottom:10px; flex-wrap:wrap; }
-    label{ display:block; font-size:13px; color:var(--muted); margin-bottom:6px; }
-    input[type="number"]{
-      width:100%; padding:10px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.04);
-      background:transparent; color:var(--text); font-size:15px;
+    .panel h2{ margin:0 0 8px 0; font-size:14px; font-weight:700; }
+    .panel input{ width:100%; padding:8px 10px; border-radius:8px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:var(--text); font-size:15px; }
+    .calc{
+      background:rgba(255,255,255,0.02); padding:12px; border-radius:10px; display:flex; gap:8px; align-items:center;
     }
-    .col{ flex:1; min-width:160px; }
-    .actions{ display:flex; gap:8px; margin-top:10px; }
+    .calc input{ flex:1; padding:10px; font-size:15px; border-radius:8px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:var(--text); }
     .btn{ background:var(--accent); color:#042028; padding:10px 12px; border-radius:8px; border:none; cursor:pointer; font-weight:700; }
-    .btn.secondary{ background:transparent; color:var(--text); border:1px solid rgba(255,255,255,0.04); }
-    .result{ margin-top:14px; padding:12px; border-radius:8px; background:rgba(255,255,255,0.02); }
-    .totals{ display:flex; gap:10px; margin-top:8px; flex-wrap:wrap; }
-    .tot{ flex:1; min-width:120px; padding:10px; border-radius:6px; background:rgba(255,255,255,0.01); text-align:center; }
-    .tot strong{ display:block; font-size:18px; margin-top:6px; }
-    .small{ color:var(--muted); font-size:13px; }
-    footer.small{ margin-top:10px; color:var(--muted); font-size:12px; text-align:right; }
+    .result{ margin-top:10px; text-align:center; font-weight:800; font-size:16px; }
+    .small{ font-size:13px; color:var(--muted); margin-top:8px; text-align:center; }
   </style>
 </head>
 <body>
-  <div class="card" role="region" aria-label="Calculadora simples de munições">
-    <h1>Calculadora simples</h1>
-    <p class="lead">Informe quantas unidades quer fabricar (base de receita: valores por 1000 unidades).</p>
-
-    <div class="row">
-      <div class="col">
-        <label for="fuzilQty">Munição de Fuzil — unidades</label>
+  <div class="wrap">
+    <div class="grid" aria-hidden="false">
+      <div class="panel" id="panelFuzil" aria-label="Munição de fuzil">
+        <h2>Munição de Fuzil</h2>
         <input id="fuzilQty" type="number" min="0" step="1" value="0" />
       </div>
-      <div class="col">
-        <label for="subQty">Munição de Sub — unidades</label>
+
+      <div class="panel" id="panelSub" aria-label="Munição de sub">
+        <h2>Munição de Sub</h2>
         <input id="subQty" type="number" min="0" step="1" value="0" />
       </div>
-      <div class="col">
-        <label for="pistolaQty">Munição de Pistola — unidades</label>
+
+      <div class="panel" id="panelPistola" aria-label="Munição de pistola">
+        <h2>Munição de Pistola</h2>
         <input id="pistolaQty" type="number" min="0" step="1" value="0" />
       </div>
     </div>
 
-    <div class="row" style="margin-top:6px;">
-      <div class="col">
-        <label for="priceFuzil">Preço unitário — Fuzil</label>
-        <input id="priceFuzil" type="number" min="0" step="1" value="290" />
-      </div>
-      <div class="col">
-        <label for="priceSub">Preço unitário — Sub</label>
-        <input id="priceSub" type="number" min="0" step="1" value="250" />
-      </div>
-      <div class="col">
-        <label for="pricePistola">Preço unitário — Pistola</label>
-        <input id="pricePistola" type="number" min="0" step="1" value="150" />
-      </div>
+    <div class="panel calc" aria-label="Painel de cálculo simples">
+      <input id="unitPrice" type="number" min="0" step="0.01" placeholder="Insira o valor (preço unitário)" />
+      <button id="calcBtn" class="btn">Calcular</button>
     </div>
 
-    <div class="actions">
-      <button id="calcBtn" class="btn">Calcular</button>
-      <button id="clearBtn" class="btn secondary">Limpar</button>
-      <button id="copyBtn" class="btn secondary" style="margin-left:auto">Copiar resu
+    <div class="result" id="result">R$ 0,00</div>
+    <div class="small">O total é: (quantidade total) × (valor que você inseriu)</div>
+  </div>
+
+  <script>
+    const fuzilQty = document.getElementById('fuzilQty');
+    const subQty = document.getElementById('subQty');
+    const pistolaQty = document.getElementById('pistolaQty');
+    const unitPrice = document.getElementById('unitPrice');
+    const calcBtn = document.getElementById('calcBtn');
+    const result = document.getElementById('result');
+
+    function moneyBR(v){
+      return 'R$ ' + Number(v).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
+    }
+
+    function calcularTotal(){
+      const qF = Math.max(0, Math.floor(Number(fuzilQty.value) || 0));
+      const qS = Math.max(0, Math.floor(Number(subQty.value) || 0));
+      const qP = Math.max(0, Math.floor(Number(pistolaQty.value) || 0));
+      const preco = Number(unitPrice.value) || 0;
+
+      const totalUnidades = qF + qS + qP;
+      const totalReais = totalUnidades * preco;
+
+      result.textContent = moneyBR(totalReais);
+    }
+
+    calcBtn.addEventListener('click', calcularTotal);
+
+    // permite Enter para calcular
+    [fuzilQty, subQty, pistolaQty, unitPrice].forEach(inp=>{
+      inp.addEventListener('keydown', (e)=> { if(e.key === 'Enter') calcularTotal(); });
+    });
+
+    // estado inicial
+    calcularTotal();
+  </script>
+</body>
+</html>
