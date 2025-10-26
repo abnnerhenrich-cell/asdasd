@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Calculadora — Munições, Recursos e Valores</title>
+  <title>Calculadora — Munições, Recursos e Valores (corrigido)</title>
   <style>
     :root{
       --bg:#071228; --card:#0b1530; --accent:#06b6d4; --text:#e6eef8; --muted:#9fb1c8;
@@ -15,7 +15,6 @@
       background:linear-gradient(180deg,#031022 0%, #071228 100%);
       color:var(--text); padding:20px;
     }
-    h2,h3{margin:0;}
     .wrap{ width:100%; max-width:920px; }
     .grid{ display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin-bottom:14px; }
     .panel{
@@ -23,7 +22,7 @@
       border:1px solid rgba(255,255,255,0.05);
     }
     .panel h2{ font-size:15px; margin-bottom:8px; }
-    .panel .priceTag{ font-size:13px; color:var(--muted); margin-bottom:8px; }
+    .priceTag{ font-size:13px; color:var(--muted); margin-bottom:8px; }
     .panel input[type="number"]{
       width:100%; padding:8px 10px; border-radius:8px;
       border:1px solid rgba(255,255,255,0.08); background:transparent;
@@ -41,6 +40,7 @@
     .totals{display:flex; flex-wrap:wrap; gap:8px; justify-content:center;}
     .tot{flex:1; min-width:120px; background:rgba(255,255,255,0.03); border-radius:8px; padding:8px; text-align:center;}
     .tot strong{display:block; margin-top:4px; font-size:16px;}
+    .small{color:var(--muted); font-size:13px;}
   </style>
 </head>
 <body>
@@ -66,8 +66,8 @@
       </div>
     </div>
     <div style="text-align:center;">
-      <button id="calcMuni" class="btn">Calcular Munições</button>
-      <button id="clearMuni" class="btn secondary">Limpar</button>
+      <button id="btnCalcMuni" class="btn">Calcular Munições</button>
+      <button id="btnClearMuni" class="btn secondary">Limpar</button>
     </div>
     <div class="results" id="resMuni">
       <div class="totals">
@@ -85,14 +85,19 @@
         Fuzil: 1000C 1000A 267P | Sub: 500C 500A 167P | Pistola: 500C 500A 100P
       </p>
       <div style="text-align:center;">
-        <button id="calcRec" class="btn">Calcular Recursos</button>
-        <button id="clearRec" class="btn secondary">Limpar</button>
+        <button id="btnCalcRec" class="btn">Calcular Recursos</button>
+        <button id="btnClearRec" class="btn secondary">Limpar</button>
       </div>
       <div class="results" id="resRec">
         <div class="totals">
-          <div class="tot"><div>Cobres</div><strong id="cobreTotal">0</strong></div>
-          <div class="tot"><div>Alumínios</div><strong id="alumTotal">0</strong></div>
-          <div class="tot"><div>Pólvoras</div><strong id="polvTotal">0</strong></div>
+          <div class="tot"><div>Cobres (exato)</div><strong id="cobreTotal">0</strong></div>
+          <div class="tot"><div>Alumínios (exato)</div><strong id="alumTotal">0</strong></div>
+          <div class="tot"><div>Pólvoras (exato)</div><strong id="polvTotal">0</strong></div>
+        </div>
+        <div class="totals" style="margin-top:8px;">
+          <div class="tot"><div>Cobres (↑)</div><strong id="cobreRound">0</strong></div>
+          <div class="tot"><div>Alumínios (↑)</div><strong id="alumRound">0</strong></div>
+          <div class="tot"><div>Pólvoras (↑)</div><strong id="polvRound">0</strong></div>
         </div>
       </div>
     </div>
@@ -123,8 +128,8 @@
         </div>
       </div>
       <div style="text-align:center;">
-        <button id="calcProd" class="btn">Calcular Produtos</button>
-        <button id="clearProd" class="btn secondary">Limpar</button>
+        <button id="btnCalcProd" class="btn">Calcular Produtos</button>
+        <button id="btnClearProd" class="btn secondary">Limpar</button>
       </div>
       <div class="results">
         <div class="totals">
@@ -139,48 +144,151 @@
   </div>
 
   <script>
-    const money = v => 'R$ ' + v.toLocaleString('pt-BR',{minimumFractionDigits:2});
-
-    // 1️⃣ Munições
-    const muni = { fuzil:290, sub:250, pistola:150 };
-    const calcMuni = () => {
-      const qF = +fuzilQty.value||0, qS = +subQty.value||0, qP = +pistolaQty.value||0;
-      const vF = qF*muni.fuzil, vS = qS*muni.sub, vP = qP*muni.pistola, tot = vF+vS+vP;
-      muniFuzil.textContent = money(vF); muniSub.textContent = money(vS); muniPistola.textContent = money(vP); muniTotal.textContent = money(tot);
+    // constantes de preço e receitas por 1000
+    const PRICES = { fuzil:290, sub:250, pistola:150, meta:300, coca:300, pct:350, seringa:700 };
+    const RECIPES = {
+      fuzil: { cobre:1000, alum:1000, pul:267 },
+      sub:   { cobre:500,  alum:500,  pul:167 },
+      pistola:{ cobre:500, alum:500,  pul:100 }
     };
-    calcMuni.onclick = calcMuni;
-    clearMuni.onclick = ()=>{fuzilQty.value=subQty.value=pistolaQty.value=0; calcMuni();};
 
-    // 2️⃣ Recursos
-    const calcRec = () => {
-      const qF=+fuzilQty.value||0,qS=+subQty.value||0,qP=+pistolaQty.value||0;
-      const cobre=(qF*1000+qS*500+qP*500)/1000;
-      const alum=(qF*1000+qS*500+qP*500)/1000;
-      const polv=(qF*267+qS*167+qP*100)/1000;
-      cobreTotal.textContent = cobre.toFixed(2);
-      alumTotal.textContent = alum.toFixed(2);
-      polvTotal.textContent = polv.toFixed(2);
-    };
-    calcRec.onclick = calcRec;
-    clearRec.onclick = ()=>{cobreTotal.textContent=alumTotal.textContent=polvTotal.textContent='0';};
+    // elementos Munições
+    const fuzilQty = document.getElementById('fuzilQty');
+    const subQty = document.getElementById('subQty');
+    const pistolaQty = document.getElementById('pistolaQty');
+    const btnCalcMuni = document.getElementById('btnCalcMuni');
+    const btnClearMuni = document.getElementById('btnClearMuni');
+    const muniFuzil = document.getElementById('muniFuzil');
+    const muniSub = document.getElementById('muniSub');
+    const muniPistola = document.getElementById('muniPistola');
+    const muniTotal = document.getElementById('muniTotal');
 
-    // 3️⃣ Produtos (Meta, Coca, Pct, Seringa)
-    const prod = { meta:300, coca:300, pct:350, seringa:700 };
-    const calcProd = () => {
-      const qM=+metaQty.value||0,qC=+cocaQty.value||0,qP=+pctQty.value||0,qS=+seringaQty.value||0;
-      const vM=qM*prod.meta,vC=qC*prod.coca,vP=qP*prod.pct,vS=qS*prod.seringa;
-      const total=vM+vC+vP+vS;
-      metaTotal.textContent=money(vM);
-      cocaTotal.textContent=money(vC);
-      pctTotal.textContent=money(vP);
-      seringaTotal.textContent=money(vS);
-      prodTotal.textContent=money(total);
-    };
-    calcProd.onclick=calcProd;
-    clearProd.onclick=()=>{metaQty.value=cocaQty.value=pctQty.value=seringaQty.value=0;calcProd();};
+    // elementos Recursos
+    const btnCalcRec = document.getElementById('btnCalcRec');
+    const btnClearRec = document.getElementById('btnClearRec');
+    const cobreTotal = document.getElementById('cobreTotal');
+    const alumTotal = document.getElementById('alumTotal');
+    const polvTotal = document.getElementById('polvTotal');
+    const cobreRound = document.getElementById('cobreRound');
+    const alumRound = document.getElementById('alumRound');
+    const polvRound = document.getElementById('polvRound');
 
-    // Inicializa tudo zerado
-    calcMuni(); calcRec(); calcProd();
+    // elementos Produtos
+    const metaQty = document.getElementById('metaQty');
+    const cocaQty = document.getElementById('cocaQty');
+    const pctQty = document.getElementById('pctQty');
+    const seringaQty = document.getElementById('seringaQty');
+    const btnCalcProd = document.getElementById('btnCalcProd');
+    const btnClearProd = document.getElementById('btnClearProd');
+    const metaTotal = document.getElementById('metaTotal');
+    const cocaTotal = document.getElementById('cocaTotal');
+    const pctTotal = document.getElementById('pctTotal');
+    const seringaTotal = document.getElementById('seringaTotal');
+    const prodTotal = document.getElementById('prodTotal');
+
+    // utilitário de formatação
+    const money = (v) => 'R$ ' + Number(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    /* ===== MUNIÇÕES ===== */
+    function calcularMuni(){
+      const qF = Math.max(0, Math.floor(Number(fuzilQty.value) || 0));
+      const qS = Math.max(0, Math.floor(Number(subQty.value) || 0));
+      const qP = Math.max(0, Math.floor(Number(pistolaQty.value) || 0));
+
+      const vF = qF * PRICES.fuzil;
+      const vS = qS * PRICES.sub;
+      const vP = qP * PRICES.pistola;
+      const tot = vF + vS + vP;
+
+      muniFuzil.textContent = money(vF);
+      muniSub.textContent = money(vS);
+      muniPistola.textContent = money(vP);
+      muniTotal.textContent = money(tot);
+    }
+
+    btnCalcMuni.addEventListener('click', calcularMuni);
+    btnClearMuni.addEventListener('click', () => {
+      fuzilQty.value = 0; subQty.value = 0; pistolaQty.value = 0;
+      calcularMuni();
+    });
+
+    /* ===== RECURSOS ===== */
+    function calcularRecursos(){
+      const qF = Math.max(0, Math.floor(Number(fuzilQty.value) || 0));
+      const qS = Math.max(0, Math.floor(Number(subQty.value) || 0));
+      const qP = Math.max(0, Math.floor(Number(pistolaQty.value) || 0));
+
+      // calcula por receita (factor = qty / 1000)
+      const rF = { cobre: RECIPES.fuzil.cobre * (qF/1000), alum: RECIPES.fuzil.alum * (qF/1000), pul: RECIPES.fuzil.pul * (qF/1000) };
+      const rS = { cobre: RECIPES.sub.cobre * (qS/1000),   alum: RECIPES.sub.alum * (qS/1000),   pul: RECIPES.sub.pul * (qS/1000) };
+      const rP = { cobre: RECIPES.pistola.cobre * (qP/1000), alum: RECIPES.pistola.alum * (qP/1000), pul: RECIPES.pistola.pul * (qP/1000) };
+
+      const cobreEx = +(rF.cobre + rS.cobre + rP.cobre).toFixed(2);
+      const alumEx  = +(rF.alum  + rS.alum  + rP.alum).toFixed(2);
+      const pulEx   = +(rF.pul   + rS.pul   + rP.pul).toFixed(2);
+
+      cobreTotal.textContent = cobreEx.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      alumTotal.textContent  = alumEx.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      polvTotal.textContent  = pulEx.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+      cobreRound.textContent = Math.ceil(cobreEx).toLocaleString('pt-BR');
+      alumRound.textContent = Math.ceil(alumEx).toLocaleString('pt-BR');
+      polvRound.textContent = Math.ceil(pulEx).toLocaleString('pt-BR');
+    }
+
+    btnCalcRec.addEventListener('click', calcularRecursos);
+    btnClearRec.addEventListener('click', () => {
+      cobreTotal.textContent = alumTotal.textContent = polvTotal.textContent = '0';
+      cobreRound.textContent = alumRound.textContent = polvRound.textContent = '0';
+    });
+
+    /* ===== PRODUTOS ===== */
+    function calcularProdutos(){
+      const qM = Math.max(0, Math.floor(Number(metaQty.value) || 0));
+      const qC = Math.max(0, Math.floor(Number(cocaQty.value) || 0));
+      const qP = Math.max(0, Math.floor(Number(pctQty.value) || 0));
+      const qS = Math.max(0, Math.floor(Number(seringaQty.value) || 0));
+
+      const vM = qM * PRICES.meta;
+      const vC = qC * PRICES.coca;
+      const vP = qP * PRICES.pct;
+      const vS = qS * PRICES.seringa;
+      const total = vM + vC + vP + vS;
+
+      metaTotal.textContent = money(vM);
+      cocaTotal.textContent = money(vC);
+      pctTotal.textContent = money(vP);
+      seringaTotal.textContent = money(vS);
+      prodTotal.textContent = money(total);
+    }
+
+    btnCalcProd.addEventListener('click', calcularProdutos);
+    btnClearProd.addEventListener('click', () => {
+      metaQty.value = cocaQty.value = pctQty.value = seringaQty.value = 0;
+      calcularProdutos();
+    });
+
+    /* ===== Atalhos Enter: calcular ao pressionar Enter nas inputs ===== */
+    const allInputs = [fuzilQty, subQty, pistolaQty, metaQty, cocaQty, pctQty, seringaQty];
+    allInputs.forEach(inp => {
+      inp.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          // Define prioridade: se a input é de munições -> calc muni + rec; se é produto -> calc produtos
+          const id = inp.id;
+          if (id === 'fuzilQty' || id === 'subQty' || id === 'pistolaQty') {
+            calcularMuni();
+            calcularRecursos();
+          } else {
+            calcularProdutos();
+          }
+        }
+      });
+    });
+
+    // Inicializa displays
+    calcularMuni();
+    calcularRecursos();
+    calcularProdutos();
   </script>
 </body>
 </html>
