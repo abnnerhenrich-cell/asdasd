@@ -82,7 +82,7 @@
     <div class="section">
       <h2 style="text-align:center;">Recursos Necessários</h2>
       <p style="text-align:center;font-size:13px;color:var(--muted);margin:4px 0 10px;">
-        Fuzil: 1000C 1000A 267P | Sub: 500C 500A 167P | Pistola: 500C 0A 100P
+        Fuzil: 1000C 1000A 267P | Sub: 500C 500A 167P | Pistola: 500C 100P
       </p>
       <div style="text-align:center;">
         <button id="btnCalcRec" class="btn">Calcular Recursos</button>
@@ -149,7 +149,7 @@
     const RECIPES = {
       fuzil: { cobre:1000, alum:1000, pul:267 },
       sub:   { cobre:500,  alum:500,  pul:167 },
-      pistola:{ cobre:500, alum:500,  pul:100 }
+      pistola:{ cobre:500, alum:0,  pul:100 }
     };
 
     // elementos Munições
