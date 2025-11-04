@@ -82,7 +82,7 @@
     <div class="section">
       <h2 style="text-align:center;">Recursos Necessários</h2>
       <p style="text-align:center;font-size:13px;color:var(--muted);margin:4px 0 10px;">
-        Fuzil: 1000C 1000A 267P | Sub: 500C 500A 167P | Pistola: 500C 500A 100P
+        Fuzil: 1000C 1000A 267P | Sub: 500C 500A 167P | Pistola: 500C 0A 100P
       </p>
       <div style="text-align:center;">
         <button id="btnCalcRec" class="btn">Calcular Recursos</button>
@@ -221,7 +221,7 @@
       // calcula por receita (factor = qty / 1000)
       const rF = { cobre: RECIPES.fuzil.cobre * (qF/1000), alum: RECIPES.fuzil.alum * (qF/1000), pul: RECIPES.fuzil.pul * (qF/1000) };
       const rS = { cobre: RECIPES.sub.cobre * (qS/1000),   alum: RECIPES.sub.alum * (qS/1000),   pul: RECIPES.sub.pul * (qS/1000) };
-      const rP = { cobre: RECIPES.pistola.cobre * (qP/1000), alum: RECIPES.pistola.alum * (qP/1000), pul: RECIPES.pistola.pul * (qP/1000) };
+      const rP = { cobre: RECIPES.pistola.cobre * (qP/1000), alum: RECIPES.pistola.alum * (qP/0), pul: RECIPES.pistola.pul * (qP/1000) };
 
       const cobreEx = +(rF.cobre + rS.cobre + rP.cobre).toFixed(2);
       const alumEx  = +(rF.alum  + rS.alum  + rP.alum).toFixed(2);
