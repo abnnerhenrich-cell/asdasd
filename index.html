@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Calculadora — Munições, Recursos e Produtos</title>
+  <title>Calculadora — Munições e Produtos</title>
   <style>
     :root {
       --bg: #071228;
@@ -152,11 +152,6 @@
       <h2>Recursos Necessários</h2>
       <p class="info">Fuzil: 1000C 1000A 267P | Sub: 500C 500A 167P | Pistola: 500C 0A 100P</p>
 
-      <div style="text-align:center;">
-        <button class="btn" id="btnCalcRec">Calcular</button>
-        <button class="btn secondary" id="btnClearRec">Limpar</button>
-      </div>
-
       <div class="results">
         <div class="totals">
           <div class="tot"><div>Cobres</div><strong id="cobreTotal">0</strong></div>
@@ -210,10 +205,10 @@
       el('muniSub').textContent=money(vS);
       el('muniPistola').textContent=money(vP);
       el('muniTotal').textContent=money(total);
+      calcularRecursos(qF, qS, qP);
     }
 
-    function calcularRecursos() {
-      const qF=+el('fuzilQty').value||0, qS=+el('subQty').value||0, qP=+el('pistolaQty').value||0;
+    function calcularRecursos(qF, qS, qP) {
       const cobre=qF*RECIPES.fuzil.cobre/1000 + qS*RECIPES.sub.cobre/1000 + qP*RECIPES.pistola.cobre/1000;
       const alum=qF*RECIPES.fuzil.alum/1000 + qS*RECIPES.sub.alum/1000 + qP*RECIPES.pistola.alum/1000;
       const polv=qF*RECIPES.fuzil.pul/1000 + qS*RECIPES.sub.pul/1000 + qP*RECIPES.pistola.pul/1000;
@@ -233,15 +228,19 @@
     }
 
     el('btnCalcMuni').onclick = calcularMuni;
-    el('btnClearMuni').onclick = () => { el('fuzilQty').value = el('subQty').value = el('pistolaQty').value = 0; calcularMuni(); };
-
-    el('btnCalcRec').onclick = calcularRecursos;
-    el('btnClearRec').onclick = () => { ['cobreTotal','alumTotal','polvTotal'].forEach(id => el(id).textContent='0'); };
+    el('btnClearMuni').onclick = () => {
+      ['fuzilQty','subQty','pistolaQty'].forEach(id => el(id).value=0);
+      calcularMuni();
+    };
 
     el('btnCalcProd').onclick = calcularProdutos;
-    el('btnClearProd').onclick = () => { ['metaQty','cocaQty','pctQty','seringaQty'].forEach(id => el(id).value=0); calcularProdutos(); };
+    el('btnClearProd').onclick = () => {
+      ['metaQty','cocaQty','pctQty','seringaQty'].forEach(id => el(id).value=0);
+      calcularProdutos();
+    };
 
-    calcularMuni(); calcularRecursos(); calcularProdutos();
+    calcularMuni();
+    calcularProdutos();
   </script>
 </body>
 </html>
