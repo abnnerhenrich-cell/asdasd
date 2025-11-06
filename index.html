@@ -3,242 +3,290 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Calculadora — Munições e Produtos</title>
+  <title>Calculadora — Munições e Recursos</title>
   <style>
-    :root {
-      --bg: #071228;
-      --card: #0b1530;
-      --accent: #06b6d4;
-      --text: #e6eef8;
-      --muted: #9fb1c8;
+    :root{
+      --bg:#071228; --card:#0b1530; --accent:#06b6d4; --text:#e6eef8; --muted:#9fb1c8;
+      --gap:12px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; min-height:100vh; font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      background:linear-gradient(180deg,#031022 0%, #071228 100%); color:var(--text); padding:24px;
+      display:flex; justify-content:center;
     }
 
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: Inter, system-ui, sans-serif;
-      background: linear-gradient(180deg, #031022 0%, #071228 100%);
-      color: var(--text);
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+    .wrap{ width:100%; max-width:920px; }
+
+    h1{ text-align:center; margin:0 0 18px; font-size:20px; letter-spacing:1px; }
+
+    /* Card container that looks like your sketch: top stripe "Valores" then middle divider then "Recursos" */
+    .card {
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:12px; padding:12px; border:1px solid rgba(255,255,255,0.04);
+      box-shadow: 0 6px 20px rgba(2,6,23,0.6);
+      overflow:hidden;
     }
 
-    h2 {
-      text-align: center;
-      margin: 0 0 12px;
+    /* Top strip: "VALORES" row */
+    .strip {
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap:var(--gap);
+      margin-bottom:10px;
     }
 
-    .wrap { width: 100%; max-width: 860px; }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
-      margin-bottom: 14px;
+    .strip .item {
+      background:var(--card);
+      border-radius:8px;
+      padding:14px;
+      text-align:center;
+      border:1px solid rgba(255,255,255,0.04);
+      display:flex; flex-direction:column; align-items:center; gap:8px;
+    }
+    .strip .item h3{ margin:0; font-size:14px; }
+    .price{ color:var(--muted); font-size:13px; }
+    input[type="number"]{
+      width:100%; max-width:120px;
+      padding:8px; border-radius:8px; border:1px solid rgba(255,255,255,0.08);
+      background:transparent; color:var(--text); text-align:center;
+      font-size:15px;
     }
 
-    .panel {
-      background: var(--card);
-      border: 1px solid rgba(255,255,255,0.05);
-      border-radius: 10px;
-      padding: 14px;
-      text-align: center;
+    /* Divider that matches the sketch */
+    .divider{
+      height:10px; margin:10px 0;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .divider .label{
+      background:transparent; padding:4px 10px; color:var(--muted); font-size:13px;
     }
 
-    .priceTag {
-      color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 8px;
+    /* Recursos row: three columns bigger */
+    .resources {
+      display:grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap:var(--gap);
     }
-
-    input[type="number"] {
-      width: 100%;
-      padding: 8px 10px;
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 8px;
-      background: transparent;
-      color: var(--text);
-      font-size: 15px;
-      text-align: center;
+    .resources .rescard{
+      background:transparent; border-radius:8px; padding:10px; text-align:center;
+      display:flex; flex-direction:column; gap:6px;
     }
-
-    .btn {
-      background: var(--accent);
-      color: #042028;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 16px;
-      font-weight: 700;
-      cursor: pointer;
-      margin: 6px 4px;
-      transition: opacity 0.2s;
+    .resbox{
+      background:var(--card); border-radius:8px; padding:14px; border:1px solid rgba(255,255,255,0.04);
+      min-height:72px; display:flex; align-items:center; justify-content:center; flex-direction:column;
     }
+    .resbox .label{ color:var(--muted); font-size:13px; }
+    .resbox .value{ margin-top:6px; font-weight:700; font-size:16px; }
 
-    .btn:hover { opacity: 0.9; }
-
-    .btn.secondary {
-      background: transparent;
-      color: var(--text);
-      border: 1px solid rgba(255,255,255,0.1);
+    /* Buttons row */
+    .actions{ display:flex; gap:10px; justify-content:center; margin-top:12px; }
+    .btn{
+      background:var(--accent); color:#042028; border:none; border-radius:8px;
+      padding:10px 14px; font-weight:700; cursor:pointer;
     }
+    .btn.secondary{ background:transparent; border:1px solid rgba(255,255,255,0.08); color:var(--text); }
 
-    .section { margin-top: 28px; }
-
-    .results {
-      background: rgba(255,255,255,0.03);
-      border-radius: 10px;
-      padding: 12px;
-      margin-top: 10px;
+    /* Products section smaller */
+    .products{ margin-top:20px; }
+    .products .grid{ display:grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); gap:10px; }
+    .panel{
+      background:var(--card); border-radius:8px; padding:10px; text-align:center; border:1px solid rgba(255,255,255,0.04);
     }
+    .smalltotals{ display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-top:8px; }
+    .smalltot{ background:rgba(255,255,255,0.02); padding:8px 10px; border-radius:8px; min-width:120px; text-align:center; }
 
-    .totals {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-    }
-
-    .tot {
-      flex: 1;
-      min-width: 120px;
-      background: rgba(255,255,255,0.05);
-      border-radius: 8px;
-      padding: 10px;
-      text-align: center;
-    }
-
-    .tot strong {
-      display: block;
-      margin-top: 4px;
-      font-size: 16px;
-    }
-
-    .info {
-      text-align: center;
-      font-size: 13px;
-      color: var(--muted);
-      margin: 6px 0 12px;
+    /* responsive tweaks */
+    @media (max-width:640px){
+      .strip, .resources { grid-template-columns: 1fr; }
+      input[type="number"]{ max-width:100%; }
     }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <h2>Calculadora de Munições</h2>
+    <h1>Calculadora — Valores & Recursos</h1>
 
-    <div class="grid">
-      <div class="panel"><h3>Fuzil</h3><div class="priceTag">R$ 290</div><input id="fuzilQty" type="number" min="0" value="0"></div>
-      <div class="panel"><h3>Sub</h3><div class="priceTag">R$ 250</div><input id="subQty" type="number" min="0" value="0"></div>
-      <div class="panel"><h3>Pistola</h3><div class="priceTag">R$ 150</div><input id="pistolaQty" type="number" min="0" value="0"></div>
-    </div>
+    <div class="card">
+      <!-- VALORES (top stripe) -->
+      <div class="strip" aria-label="valores">
+        <div class="item">
+          <h3>Fuzil</h3>
+          <div class="price">R$ 290</div>
+          <input id="fuzilQty" type="number" min="0" value="0" aria-label="Quantidade fuzil">
+        </div>
 
-    <div style="text-align:center;">
-      <button class="btn" id="btnCalcMuni">Calcular</button>
-      <button class="btn secondary" id="btnClearMuni">Limpar</button>
-    </div>
+        <div class="item">
+          <h3>Sub</h3>
+          <div class="price">R$ 250</div>
+          <input id="subQty" type="number" min="0" value="0" aria-label="Quantidade sub">
+        </div>
 
-    <div class="results">
-      <div class="totals">
-        <div class="tot"><div>Fuzil</div><strong id="muniFuzil">R$ 0</strong></div>
-        <div class="tot"><div>Sub</div><strong id="muniSub">R$ 0</strong></div>
-        <div class="tot"><div>Pistola</div><strong id="muniPistola">R$ 0</strong></div>
-        <div class="tot"><div>Total</div><strong id="muniTotal">R$ 0</strong></div>
-      </div>
-    </div>
-
-    <div class="section">
-      <h2>Recursos Necessários</h2>
-      <p class="info">Fuzil: 1000C 1000A 267P | Sub: 500C 500A 167P | Pistola: 500C 0A 100P</p>
-
-      <div class="results">
-        <div class="totals">
-          <div class="tot"><div>Cobres</div><strong id="cobreTotal">0</strong></div>
-          <div class="tot"><div>Alumínios</div><strong id="alumTotal">0</strong></div>
-          <div class="tot"><div>Pólvoras</div><strong id="polvTotal">0</strong></div>
+        <div class="item">
+          <h3>Pistola</h3>
+          <div class="price">R$ 150</div>
+          <input id="pistolaQty" type="number" min="0" value="0" aria-label="Quantidade pistola">
         </div>
       </div>
+
+      <!-- Divider label like sketch -->
+      <div class="divider"><div class="label">Recursos</div></div>
+
+      <!-- RECURSOS (middle area) -->
+      <div class="resources" aria-label="recursos">
+        <div class="rescard">
+          <div class="resbox">
+            <div class="label">Cobres</div>
+            <div id="cobreTotal" class="value">0</div>
+          </div>
+        </div>
+
+        <div class="rescard">
+          <div class="resbox">
+            <div class="label">Alumínios</div>
+            <div id="alumTotal" class="value">0</div>
+          </div>
+        </div>
+
+        <div class="rescard">
+          <div class="resbox">
+            <div class="label">Pólvoras</div>
+            <div id="polvTotal" class="value">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Totais de valor das munições inline (abaixo dos recursos) -->
+      <div style="margin-top:12px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+        <div class="smalltot">Fuzil: <strong id="muniFuzil">R$ 0</strong></div>
+        <div class="smalltot">Sub: <strong id="muniSub">R$ 0</strong></div>
+        <div class="smalltot">Pistola: <strong id="muniPistola">R$ 0</strong></div>
+        <div class="smalltot">Total: <strong id="muniTotal">R$ 0</strong></div>
+      </div>
+
+      <!-- Ações -->
+      <div class="actions">
+        <button id="btnCalcMuni" class="btn">Calcular</button>
+        <button id="btnClearMuni" class="btn secondary">Limpar</button>
+      </div>
     </div>
 
-    <div class="section">
-      <h2>Calculadora de Produtos</h2>
+    <!-- Produtos (compact, abaixo) -->
+    <div class="products">
+      <h2 style="text-align:center;margin:14px 0 8px;font-size:16px;color:var(--muted)">Produtos</h2>
       <div class="grid">
-        <div class="panel"><h3>Meta</h3><div class="priceTag">R$ 300</div><input id="metaQty" type="number" min="0" value="0"></div>
-        <div class="panel"><h3>Coca</h3><div class="priceTag">R$ 300</div><input id="cocaQty" type="number" min="0" value="0"></div>
-        <div class="panel"><h3>Pct Meta</h3><div class="priceTag">R$ 350</div><input id="pctQty" type="number" min="0" value="0"></div>
-        <div class="panel"><h3>Seringa</h3><div class="priceTag">R$ 700</div><input id="seringaQty" type="number" min="0" value="0"></div>
-      </div>
-
-      <div style="text-align:center;">
-        <button class="btn" id="btnCalcProd">Calcular</button>
-        <button class="btn secondary" id="btnClearProd">Limpar</button>
-      </div>
-
-      <div class="results">
-        <div class="totals">
-          <div class="tot"><div>Meta</div><strong id="metaTotal">R$ 0</strong></div>
-          <div class="tot"><div>Coca</div><strong id="cocaTotal">R$ 0</strong></div>
-          <div class="tot"><div>Pct Meta</div><strong id="pctTotal">R$ 0</strong></div>
-          <div class="tot"><div>Seringa</div><strong id="seringaTotal">R$ 0</strong></div>
-          <div class="tot"><div>Total</div><strong id="prodTotal">R$ 0</strong></div>
+        <div class="panel">
+          <div style="font-weight:700">Meta</div>
+          <div class="price" style="margin-bottom:8px">R$ 300</div>
+          <input id="metaQty" type="number" min="0" value="0">
+        </div>
+        <div class="panel">
+          <div style="font-weight:700">Coca</div>
+          <div class="price" style="margin-bottom:8px">R$ 300</div>
+          <input id="cocaQty" type="number" min="0" value="0">
+        </div>
+        <div class="panel">
+          <div style="font-weight:700">Pct Meta</div>
+          <div class="price" style="margin-bottom:8px">R$ 350</div>
+          <input id="pctQty" type="number" min="0" value="0">
+        </div>
+        <div class="panel">
+          <div style="font-weight:700">Seringa</div>
+          <div class="price" style="margin-bottom:8px">R$ 700</div>
+          <input id="seringaQty" type="number" min="0" value="0">
         </div>
       </div>
+
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:10px">
+        <button id="btnCalcProd" class="btn">Calcular Produtos</button>
+        <button id="btnClearProd" class="btn secondary">Limpar Produtos</button>
+      </div>
+
+      <div class="smalltotals" style="margin-top:10px">
+        <div class="smalltot">Meta: <strong id="metaTotal">R$ 0</strong></div>
+        <div class="smalltot">Coca: <strong id="cocaTotal">R$ 0</strong></div>
+        <div class="smalltot">Pct: <strong id="pctTotal">R$ 0</strong></div>
+        <div class="smalltot">Seringa: <strong id="seringaTotal">R$ 0</strong></div>
+        <div class="smalltot">Total: <strong id="prodTotal">R$ 0</strong></div>
+      </div>
     </div>
+
   </div>
 
   <script>
+    // dados
     const PRICES = { fuzil:290, sub:250, pistola:150, meta:300, coca:300, pct:350, seringa:700 };
     const RECIPES = {
       fuzil:{ cobre:1000, alum:1000, pul:267 },
-      sub:{ cobre:500, alum:500, pul:167 },
-      pistola:{ cobre:500, alum:0, pul:100 }
+      sub:{   cobre:500,  alum:500,  pul:167 },
+      pistola:{ cobre:500, alum:0,  pul:100 }
     };
 
+    // helpers
     const el = id => document.getElementById(id);
-    const money = v => 'R$ ' + Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2});
+    const money = v => 'R$ ' + Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
 
-    function calcularMuni() {
-      const qF=+el('fuzilQty').value||0, qS=+el('subQty').value||0, qP=+el('pistolaQty').value||0;
-      const vF=qF*PRICES.fuzil, vS=qS*PRICES.sub, vP=qP*PRICES.pistola, total=vF+vS+vP;
-      el('muniFuzil').textContent=money(vF);
-      el('muniSub').textContent=money(vS);
-      el('muniPistola').textContent=money(vP);
-      el('muniTotal').textContent=money(total);
+    // cálculo munições + recursos (recursos atualizam automaticamente)
+    function calcularMuni(){
+      const qF = +el('fuzilQty').value || 0;
+      const qS = +el('subQty').value || 0;
+      const qP = +el('pistolaQty').value || 0;
+
+      const vF = qF * PRICES.fuzil;
+      const vS = qS * PRICES.sub;
+      const vP = qP * PRICES.pistola;
+      const total = vF + vS + vP;
+
+      el('muniFuzil').textContent = money(vF);
+      el('muniSub').textContent = money(vS);
+      el('muniPistola').textContent = money(vP);
+      el('muniTotal').textContent = money(total);
+
       calcularRecursos(qF, qS, qP);
     }
 
-    function calcularRecursos(qF, qS, qP) {
-      const cobre=qF*RECIPES.fuzil.cobre/1000 + qS*RECIPES.sub.cobre/1000 + qP*RECIPES.pistola.cobre/1000;
-      const alum=qF*RECIPES.fuzil.alum/1000 + qS*RECIPES.sub.alum/1000 + qP*RECIPES.pistola.alum/1000;
-      const polv=qF*RECIPES.fuzil.pul/1000 + qS*RECIPES.sub.pul/1000 + qP*RECIPES.pistola.pul/1000;
-      el('cobreTotal').textContent=cobre.toFixed(2);
-      el('alumTotal').textContent=alum.toFixed(2);
-      el('polvTotal').textContent=polv.toFixed(2);
+    // cálcula recursos a partir das quantidades (exibe em unidades)
+    function calcularRecursos(qF, qS, qP){
+      const cobre = qF*RECIPES.fuzil.cobre/1000 + qS*RECIPES.sub.cobre/1000 + qP*RECIPES.pistola.cobre/1000;
+      const alum  = qF*RECIPES.fuzil.alum/1000  + qS*RECIPES.sub.alum/1000  + qP*RECIPES.pistola.alum/1000;
+      const polv  = qF*RECIPES.fuzil.pul/1000   + qS*RECIPES.sub.pul/1000   + qP*RECIPES.pistola.pul/1000;
+
+      el('cobreTotal').textContent = Number(cobre).toFixed(2);
+      el('alumTotal').textContent  = Number(alum).toFixed(2);
+      el('polvTotal').textContent  = Number(polv).toFixed(2);
     }
 
-    function calcularProdutos() {
-      const qM=+el('metaQty').value||0, qC=+el('cocaQty').value||0, qP=+el('pctQty').value||0, qS=+el('seringaQty').value||0;
-      const vM=qM*PRICES.meta, vC=qC*PRICES.coca, vP=qP*PRICES.pct, vS=qS*PRICES.seringa, total=vM+vC+vP+vS;
-      el('metaTotal').textContent=money(vM);
-      el('cocaTotal').textContent=money(vC);
-      el('pctTotal').textContent=money(vP);
-      el('seringaTotal').textContent=money(vS);
-      el('prodTotal').textContent=money(total);
+    // produtos (mantive cálculo separado)
+    function calcularProdutos(){
+      const qM = +el('metaQty').value || 0;
+      const qC = +el('cocaQty').value || 0;
+      const qP = +el('pctQty').value || 0;
+      const qS = +el('seringaQty').value || 0;
+
+      const vM = qM*PRICES.meta, vC = qC*PRICES.coca, vP = qP*PRICES.pct, vS = qS*PRICES.seringa;
+      const total = vM + vC + vP + vS;
+
+      el('metaTotal').textContent = money(vM);
+      el('cocaTotal').textContent = money(vC);
+      el('pctTotal').textContent = money(vP);
+      el('seringaTotal').textContent = money(vS);
+      el('prodTotal').textContent = money(total);
     }
 
-    el('btnCalcMuni').onclick = calcularMuni;
-    el('btnClearMuni').onclick = () => {
-      ['fuzilQty','subQty','pistolaQty'].forEach(id => el(id).value=0);
+    // eventos
+    el('btnCalcMuni').addEventListener('click', calcularMuni);
+    el('btnClearMuni').addEventListener('click', () => {
+      ['fuzilQty','subQty','pistolaQty'].forEach(id => el(id).value = 0);
       calcularMuni();
-    };
+    });
 
-    el('btnCalcProd').onclick = calcularProdutos;
-    el('btnClearProd').onclick = () => {
-      ['metaQty','cocaQty','pctQty','seringaQty'].forEach(id => el(id).value=0);
+    el('btnCalcProd').addEventListener('click', calcularProdutos);
+    el('btnClearProd').addEventListener('click', () => {
+      ['metaQty','cocaQty','pctQty','seringaQty'].forEach(id => el(id).value = 0);
       calcularProdutos();
-    };
+    });
 
+    // inicializa valores
     calcularMuni();
     calcularProdutos();
   </script>
