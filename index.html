@@ -2,74 +2,144 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Calculadora — Munições, Recursos e Valores (corrigido)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Calculadora — Munições, Recursos e Produtos</title>
   <style>
-    :root{
-      --bg:#071228; --card:#0b1530; --accent:#06b6d4; --text:#e6eef8; --muted:#9fb1c8;
+    :root {
+      --bg: #071228;
+      --card: #0b1530;
+      --accent: #06b6d4;
+      --text: #e6eef8;
+      --muted: #9fb1c8;
     }
-    *{box-sizing:border-box}
-    body{
-      margin:0; min-height:100vh; display:flex; flex-direction:column; align-items:center;
-      font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
-      background:linear-gradient(180deg,#031022 0%, #071228 100%);
-      color:var(--text); padding:20px;
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, system-ui, sans-serif;
+      background: linear-gradient(180deg, #031022 0%, #071228 100%);
+      color: var(--text);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-    .wrap{ width:100%; max-width:920px; }
-    .grid{ display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin-bottom:14px; }
-    .panel{
-      background:var(--card); border-radius:10px; padding:12px; text-align:center;
-      border:1px solid rgba(255,255,255,0.05);
+
+    h2 {
+      text-align: center;
+      margin: 0 0 12px;
     }
-    .panel h2{ font-size:15px; margin-bottom:8px; }
-    .priceTag{ font-size:13px; color:var(--muted); margin-bottom:8px; }
-    .panel input[type="number"]{
-      width:100%; padding:8px 10px; border-radius:8px;
-      border:1px solid rgba(255,255,255,0.08); background:transparent;
-      color:var(--text); font-size:15px;
+
+    .wrap { width: 100%; max-width: 860px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-bottom: 14px;
     }
-    .btn{
-      background:var(--accent); color:#042028; padding:10px 14px; border-radius:8px;
-      border:none; cursor:pointer; font-weight:700; margin:6px 4px;
+
+    .panel {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
     }
-    .btn.secondary{ background:transparent; color:var(--text); border:1px solid rgba(255,255,255,0.08); }
-    .section{margin-top:22px;}
-    .results{
-      background:rgba(255,255,255,0.02); border-radius:10px; padding:12px; margin-top:10px;
+
+    .priceTag {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 8px;
     }
-    .totals{display:flex; flex-wrap:wrap; gap:8px; justify-content:center;}
-    .tot{flex:1; min-width:120px; background:rgba(255,255,255,0.03); border-radius:8px; padding:8px; text-align:center;}
-    .tot strong{display:block; margin-top:4px; font-size:16px;}
-    .small{color:var(--muted); font-size:13px;}
+
+    input[type="number"] {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--text);
+      font-size: 15px;
+      text-align: center;
+    }
+
+    .btn {
+      background: var(--accent);
+      color: #042028;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin: 6px 4px;
+      transition: opacity 0.2s;
+    }
+
+    .btn:hover { opacity: 0.9; }
+
+    .btn.secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .section { margin-top: 28px; }
+
+    .results {
+      background: rgba(255,255,255,0.03);
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 10px;
+    }
+
+    .totals {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .tot {
+      flex: 1;
+      min-width: 120px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .tot strong {
+      display: block;
+      margin-top: 4px;
+      font-size: 16px;
+    }
+
+    .info {
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+      margin: 6px 0 12px;
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <h2 style="text-align:center;margin-bottom:10px;">Calculadora de Munições</h2>
+    <h2>Calculadora de Munições</h2>
 
-    <!-- 1️⃣ MUNIÇÕES -->
     <div class="grid">
-      <div class="panel">
-        <h2>Munição de Fuzil</h2>
-        <div class="priceTag">Preço: R$ 290</div>
-        <input id="fuzilQty" type="number" min="0" value="0">
-      </div>
-      <div class="panel">
-        <h2>Munição de Sub</h2>
-        <div class="priceTag">Preço: R$ 250</div>
-        <input id="subQty" type="number" min="0" value="0">
-      </div>
-      <div class="panel">
-        <h2>Munição de Pistola</h2>
-        <div class="priceTag">Preço: R$ 150</div>
-        <input id="pistolaQty" type="number" min="0" value="0">
-      </div>
+      <div class="panel"><h3>Fuzil</h3><div class="priceTag">R$ 290</div><input id="fuzilQty" type="number" min="0" value="0"></div>
+      <div class="panel"><h3>Sub</h3><div class="priceTag">R$ 250</div><input id="subQty" type="number" min="0" value="0"></div>
+      <div class="panel"><h3>Pistola</h3><div class="priceTag">R$ 150</div><input id="pistolaQty" type="number" min="0" value="0"></div>
     </div>
+
     <div style="text-align:center;">
-      <button id="btnCalcMuni" class="btn">Calcular Munições</button>
-      <button id="btnClearMuni" class="btn secondary">Limpar</button>
+      <button class="btn" id="btnCalcMuni">Calcular</button>
+      <button class="btn secondary" id="btnClearMuni">Limpar</button>
     </div>
-    <div class="results" id="resMuni">
+
+    <div class="results">
       <div class="totals">
         <div class="tot"><div>Fuzil</div><strong id="muniFuzil">R$ 0</strong></div>
         <div class="tot"><div>Sub</div><strong id="muniSub">R$ 0</strong></div>
@@ -78,57 +148,43 @@
       </div>
     </div>
 
-    <!-- 2️⃣ RECURSOS -->
     <div class="section">
-      <h2 style="text-align:center;">Recursos Necessários</h2>
-      <p style="text-align:center;font-size:13px;color:var(--muted);margin:4px 0 10px;">
-        Fuzil: 1000C 1000A 267P | Sub: 500C 500A 167P | Pistola: 500C 0A 100P
-      </p>
-      <div style="text-align:center;">
-        <button id="btnCalcRec" class="btn">Calcular Recursos</button>
-        <button id="btnClearRec" class="btn secondary">Limpar</button>
-      </div>
-      <div class="results" id="resRec">
-        <div class="totals">
-          <div class="tot"><div>Cobres </div><strong id="cobreTotal">0</strong></div>
-          <div class="tot"><div>Alumínios </div><strong id="alumTotal">0</strong></div>
-          <div class="tot"><div>Pólvoras </div><strong id="polvTotal">0</strong></div>
-        </div>
+      <h2>Recursos Necessários</h2>
+      <p class="info">Fuzil: 1000C 1000A 267P | Sub: 500C 500A 167P | Pistola: 500C 0A 100P</p>
 
-    <!-- 3️⃣ PRODUTOS -->
-    <div class="section">
-      <h2 style="text-align:center;">Calculadora de Valor — Produtos</h2>
-      <div class="grid">
-        <div class="panel">
-          <h2>Meta</h2>
-          <div class="priceTag">Preço: R$ 300</div>
-          <input id="metaQty" type="number" min="0" value="0">
-        </div>
-        <div class="panel">
-          <h2>Coca</h2>
-          <div class="priceTag">Preço: R$ 300</div>
-          <input id="cocaQty" type="number" min="0" value="0">
-        </div>
-        <div class="panel">
-          <h2>Pct de Meta</h2>
-          <div class="priceTag">Preço: R$ 350</div>
-          <input id="pctQty" type="number" min="0" value="0">
-        </div>
-        <div class="panel">
-          <h2>Seringa</h2>
-          <div class="priceTag">Preço: R$ 700</div>
-          <input id="seringaQty" type="number" min="0" value="0">
-        </div>
-      </div>
       <div style="text-align:center;">
-        <button id="btnCalcProd" class="btn">Calcular Produtos</button>
-        <button id="btnClearProd" class="btn secondary">Limpar</button>
+        <button class="btn" id="btnCalcRec">Calcular</button>
+        <button class="btn secondary" id="btnClearRec">Limpar</button>
       </div>
+
+      <div class="results">
+        <div class="totals">
+          <div class="tot"><div>Cobres</div><strong id="cobreTotal">0</strong></div>
+          <div class="tot"><div>Alumínios</div><strong id="alumTotal">0</strong></div>
+          <div class="tot"><div>Pólvoras</div><strong id="polvTotal">0</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Calculadora de Produtos</h2>
+      <div class="grid">
+        <div class="panel"><h3>Meta</h3><div class="priceTag">R$ 300</div><input id="metaQty" type="number" min="0" value="0"></div>
+        <div class="panel"><h3>Coca</h3><div class="priceTag">R$ 300</div><input id="cocaQty" type="number" min="0" value="0"></div>
+        <div class="panel"><h3>Pct Meta</h3><div class="priceTag">R$ 350</div><input id="pctQty" type="number" min="0" value="0"></div>
+        <div class="panel"><h3>Seringa</h3><div class="priceTag">R$ 700</div><input id="seringaQty" type="number" min="0" value="0"></div>
+      </div>
+
+      <div style="text-align:center;">
+        <button class="btn" id="btnCalcProd">Calcular</button>
+        <button class="btn secondary" id="btnClearProd">Limpar</button>
+      </div>
+
       <div class="results">
         <div class="totals">
           <div class="tot"><div>Meta</div><strong id="metaTotal">R$ 0</strong></div>
           <div class="tot"><div>Coca</div><strong id="cocaTotal">R$ 0</strong></div>
-          <div class="tot"><div>Pct de Meta</div><strong id="pctTotal">R$ 0</strong></div>
+          <div class="tot"><div>Pct Meta</div><strong id="pctTotal">R$ 0</strong></div>
           <div class="tot"><div>Seringa</div><strong id="seringaTotal">R$ 0</strong></div>
           <div class="tot"><div>Total</div><strong id="prodTotal">R$ 0</strong></div>
         </div>
@@ -139,53 +195,53 @@
   <script>
     const PRICES = { fuzil:290, sub:250, pistola:150, meta:300, coca:300, pct:350, seringa:700 };
     const RECIPES = {
-      fuzil: { cobre:1000, alum:1000, pul:267 },
-      sub:   { cobre:500,  alum:500,  pul:167 },
-      pistola:{ cobre:500, alum:0,  pul:100 } // 🔧 corrigido aqui
+      fuzil:{ cobre:1000, alum:1000, pul:267 },
+      sub:{ cobre:500, alum:500, pul:167 },
+      pistola:{ cobre:500, alum:0, pul:100 }
     };
 
-    const fuzilQty=document.getElementById('fuzilQty'),subQty=document.getElementById('subQty'),pistolaQty=document.getElementById('pistolaQty');
-    const btnCalcMuni=document.getElementById('btnCalcMuni'),btnClearMuni=document.getElementById('btnClearMuni');
-    const muniFuzil=document.getElementById('muniFuzil'),muniSub=document.getElementById('muniSub'),muniPistola=document.getElementById('muniPistola'),muniTotal=document.getElementById('muniTotal');
-    const btnCalcRec=document.getElementById('btnCalcRec'),btnClearRec=document.getElementById('btnClearRec');
-    const cobreTotal=document.getElementById('cobreTotal'),alumTotal=document.getElementById('alumTotal'),polvTotal=document.getElementById('polvTotal');
-    const cobreRound=document.getElementById('cobreRound'),alumRound=document.getElementById('alumRound'),polvRound=document.getElementById('polvRound');
-    const metaQty=document.getElementById('metaQty'),cocaQty=document.getElementById('cocaQty'),pctQty=document.getElementById('pctQty'),seringaQty=document.getElementById('seringaQty');
-    const btnCalcProd=document.getElementById('btnCalcProd'),btnClearProd=document.getElementById('btnClearProd');
-    const metaTotal=document.getElementById('metaTotal'),cocaTotal=document.getElementById('cocaTotal'),pctTotal=document.getElementById('pctTotal'),seringaTotal=document.getElementById('seringaTotal'),prodTotal=document.getElementById('prodTotal');
-    const money=v=>'R$ '+Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+    const el = id => document.getElementById(id);
+    const money = v => 'R$ ' + Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2});
 
-    function calcularMuni(){
-      const qF=+fuzilQty.value||0,qS=+subQty.value||0,qP=+pistolaQty.value||0;
-      const vF=qF*PRICES.fuzil,vS=qS*PRICES.sub,vP=qP*PRICES.pistola,tot=vF+vS+vP;
-      muniFuzil.textContent=money(vF);muniSub.textContent=money(vS);muniPistola.textContent=money(vP);muniTotal.textContent=money(tot);
+    function calcularMuni() {
+      const qF=+el('fuzilQty').value||0, qS=+el('subQty').value||0, qP=+el('pistolaQty').value||0;
+      const vF=qF*PRICES.fuzil, vS=qS*PRICES.sub, vP=qP*PRICES.pistola, total=vF+vS+vP;
+      el('muniFuzil').textContent=money(vF);
+      el('muniSub').textContent=money(vS);
+      el('muniPistola').textContent=money(vP);
+      el('muniTotal').textContent=money(total);
     }
 
-    btnCalcMuni.onclick=calcularMuni;
-    btnClearMuni.onclick=()=>{fuzilQty.value=subQty.value=pistolaQty.value=0;calcularMuni();};
-
-    function calcularRecursos(){
-      const qF=+fuzilQty.value||0,qS=+subQty.value||0,qP=+pistolaQty.value||0;
-      const cobre=qF*RECIPES.fuzil.cobre/1000+qS*RECIPES.sub.cobre/1000+qP*RECIPES.pistola.cobre/1000;
-      const alum=qF*RECIPES.fuzil.alum/1000+qS*RECIPES.sub.alum/1000+qP*RECIPES.pistola.alum/1000;
-      const polv=qF*RECIPES.fuzil.pul/1000+qS*RECIPES.sub.pul/1000+qP*RECIPES.pistola.pul/1000;
-      cobreTotal.textContent=cobre.toFixed(2);alumTotal.textContent=alum.toFixed(2);polvTotal.textContent=polv.toFixed(2);
-      cobreRound.textContent=Math.ceil(cobre);alumRound.textContent=Math.ceil(alum);polvRound.textContent=Math.ceil(polv);
+    function calcularRecursos() {
+      const qF=+el('fuzilQty').value||0, qS=+el('subQty').value||0, qP=+el('pistolaQty').value||0;
+      const cobre=qF*RECIPES.fuzil.cobre/1000 + qS*RECIPES.sub.cobre/1000 + qP*RECIPES.pistola.cobre/1000;
+      const alum=qF*RECIPES.fuzil.alum/1000 + qS*RECIPES.sub.alum/1000 + qP*RECIPES.pistola.alum/1000;
+      const polv=qF*RECIPES.fuzil.pul/1000 + qS*RECIPES.sub.pul/1000 + qP*RECIPES.pistola.pul/1000;
+      el('cobreTotal').textContent=cobre.toFixed(2);
+      el('alumTotal').textContent=alum.toFixed(2);
+      el('polvTotal').textContent=polv.toFixed(2);
     }
 
-    btnCalcRec.onclick=calcularRecursos;
-    btnClearRec.onclick=()=>{cobreTotal.textContent=alumTotal.textContent=polvTotal.textContent='0';cobreRound.textContent=alumRound.textContent=polvRound.textContent='0';};
-
-    function calcularProdutos(){
-      const qM=+metaQty.value||0,qC=+cocaQty.value||0,qP=+pctQty.value||0,qS=+seringaQty.value||0;
-      const vM=qM*PRICES.meta,vC=qC*PRICES.coca,vP=qP*PRICES.pct,vS=qS*PRICES.seringa,total=vM+vC+vP+vS;
-      metaTotal.textContent=money(vM);cocaTotal.textContent=money(vC);pctTotal.textContent=money(vP);seringaTotal.textContent=money(vS);prodTotal.textContent=money(total);
+    function calcularProdutos() {
+      const qM=+el('metaQty').value||0, qC=+el('cocaQty').value||0, qP=+el('pctQty').value||0, qS=+el('seringaQty').value||0;
+      const vM=qM*PRICES.meta, vC=qC*PRICES.coca, vP=qP*PRICES.pct, vS=qS*PRICES.seringa, total=vM+vC+vP+vS;
+      el('metaTotal').textContent=money(vM);
+      el('cocaTotal').textContent=money(vC);
+      el('pctTotal').textContent=money(vP);
+      el('seringaTotal').textContent=money(vS);
+      el('prodTotal').textContent=money(total);
     }
 
-    btnCalcProd.onclick=calcularProdutos;
-    btnClearProd.onclick=()=>{metaQty.value=cocaQty.value=pctQty.value=seringaQty.value=0;calcularProdutos();};
+    el('btnCalcMuni').onclick = calcularMuni;
+    el('btnClearMuni').onclick = () => { el('fuzilQty').value = el('subQty').value = el('pistolaQty').value = 0; calcularMuni(); };
 
-    calcularMuni();calcularRecursos();calcularProdutos();
+    el('btnCalcRec').onclick = calcularRecursos;
+    el('btnClearRec').onclick = () => { ['cobreTotal','alumTotal','polvTotal'].forEach(id => el(id).textContent='0'); };
+
+    el('btnCalcProd').onclick = calcularProdutos;
+    el('btnClearProd').onclick = () => { ['metaQty','cocaQty','pctQty','seringaQty'].forEach(id => el(id).value=0); calcularProdutos(); };
+
+    calcularMuni(); calcularRecursos(); calcularProdutos();
   </script>
 </body>
 </html>
