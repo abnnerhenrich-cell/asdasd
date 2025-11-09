@@ -146,8 +146,8 @@
 
       <!-- Todos os materiais do Tec-9 exibidos juntos, mesmo estilo das caixas -->
       <div class="resources" aria-label="recursos-tec9" style="grid-template-columns: repeat(4,1fr); gap:12px;">
-        <div class="rescard"><div class="resbox"><div class="label">Cobres</div><div id="tec9_cobre_total" class="value">0</div></div></div>
-        <div class="rescard"><div class="resbox"><div class="label">Alumínios</div><div id="tec9_alum_total" class="value">0</div></div></div>
+        <div class="rescard"><div class="resbox"><div class="label">Cobres</div><div id="tec9_cobre_total" class="value">0.00</div></div></div>
+        <div class="rescard"><div class="resbox"><div class="label">Alumínios</div><div id="tec9_alum_total" class="value">0.00</div></div></div>
         <div class="rescard"><div class="resbox"><div class="label">Plástico</div><div id="tec9_plastico_total" class="value">0</div></div></div>
         <div class="rescard"><div class="resbox"><div class="label">Vidro</div><div id="tec9_vidro_total" class="value">0</div></div></div>
         <div class="rescard"><div class="resbox"><div class="label">Borracha</div><div id="tec9_borracha_total" class="value">0</div></div></div>
@@ -290,8 +290,8 @@
       const corpoSubTotal = q * TEC9.corpo_sub;
 
       // cobre e alum (essas eram especificadas como 75 cada) — convertido para mesma unidade exibida (kg-like)
-      const cobreTotal = (q * TEC9.cobre)/1000;
-      const alumTotal = (q * TEC9.alum)/1000;
+      const cobreTotal = q * TEC9.cobre; // exibido em unidades (cada Tec-9 exige 75 cobre)
+      const alumTotal = q * TEC9.alum;
 
       el('tec9TotalValue').textContent = money(totalValue);
       el('tec9_plastico_total').textContent = plasticoTotal;
@@ -300,8 +300,8 @@
       el('tec9_engrenagem_total').textContent = engrenagemTotal;
       el('tec9_pecasarma_total').textContent = pecasArmaTotal;
       el('tec9_corposub_total').textContent = corpoSubTotal;
-      el('tec9_cobre_total').textContent = Number(cobreTotal).toFixed(2);
-      el('tec9_alum_total').textContent = Number(alumTotal).toFixed(2);
+      el('tec9_cobre_total').textContent = cobreTotal;
+      el('tec9_alum_total').textContent = alumTotal;
     }
 
     // eventos
