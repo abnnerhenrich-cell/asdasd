@@ -41,10 +41,11 @@
       background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
       border-radius:14px; padding:16px; border:1px solid var(--glass);
       box-shadow: 0 10px 40px rgba(2,6,23,0.6); overflow:hidden; backdrop-filter: blur(6px);
+      margin-bottom:18px;
     }
 
     /* Top strip */
-    .strip { display:grid; grid-template-columns: repeat(3,1fr); gap:var(--gap); margin-bottom:12px; }
+    .strip { display:grid; grid-template-columns: repeat(auto-fit,minmax(140px,1fr)); gap:var(--gap); margin-bottom:12px; }
 
     .strip .item{ background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005)); border-radius:10px; padding:12px; text-align:center; border:1px solid rgba(255,255,255,0.03); }
     .strip .item h3{ margin:0; font-size:13px; font-weight:600 }
@@ -71,6 +72,11 @@
     .products .grid{ display:grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); gap:12px }
     .panel{ background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005)); border-radius:10px; padding:12px; text-align:center; border:1px solid rgba(255,255,255,0.03) }
 
+    /* Tec-9 specific small card */
+    .tec9-card{ background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.007)); border-radius:12px; padding:12px; border:1px solid rgba(255,255,255,0.03); }
+    .tec-grid{ display:grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); gap:10px; margin-top:10px }
+    .material{ background:rgba(255,255,255,0.02); padding:10px; border-radius:8px; text-align:center }
+
     /* responsive */
     @media (max-width:760px){ .strip, .resources { grid-template-columns:1fr } input[type="number"]{ max-width:100% } .wrap{ padding:0 12px } }
 
@@ -83,6 +89,7 @@
   <div class="wrap">
     <h1>Calculadora — Valores & Recursos</h1>
 
+    <!-- Munições principais (sem Tec-9) -->
     <div class="card" role="region" aria-label="calculadora munições e recursos">
       <div class="strip" aria-label="valores">
         <div class="item">
@@ -125,6 +132,41 @@
       </div>
     </div>
 
+    <!-- Tec-9 separado -->
+    <div class="card tec9-card" role="region" aria-label="calculadora tec-9">
+      <div class="strip" aria-label="tec9-valores" style="justify-items:center;align-items:center;">
+        <div class="item" style="max-width:220px;margin:0 auto;">
+          <h3>Tec-9</h3>
+          <div class="price">R$ 110.000</div>
+          <input id="tec9Qty" type="number" min="0" value="0" aria-label="Quantidade Tec-9">
+        </div>
+      </div>
+
+      <div class="divider"><div class="label">Recursos</div></div>
+
+      <!-- Todos os materiais do Tec-9 exibidos juntos, mesmo estilo das caixas -->
+      <div class="resources" aria-label="recursos-tec9" style="grid-template-columns: repeat(4,1fr); gap:12px;">
+        <div class="rescard"><div class="resbox"><div class="label">Cobres</div><div id="tec9_cobre_total" class="value">0.00</div></div></div>
+        <div class="rescard"><div class="resbox"><div class="label">Alumínios</div><div id="tec9_alum_total" class="value">0.00</div></div></div>
+        <div class="rescard"><div class="resbox"><div class="label">Plástico</div><div id="tec9_plastico_total" class="value">0</div></div></div>
+        <div class="rescard"><div class="resbox"><div class="label">Vidro</div><div id="tec9_vidro_total" class="value">0</div></div></div>
+        <div class="rescard"><div class="resbox"><div class="label">Borracha</div><div id="tec9_borracha_total" class="value">0</div></div></div>
+        <div class="rescard"><div class="resbox"><div class="label">Engrenagem</div><div id="tec9_engrenagem_total" class="value">0</div></div></div>
+        <div class="rescard"><div class="resbox"><div class="label">Peças arma</div><div id="tec9_pecasarma_total" class="value">0</div></div></div>
+        <div class="rescard"><div class="resbox"><div class="label">Corpo de sub</div><div id="tec9_corposub_total" class="value">0</div></div></div>
+      </div>
+
+      <div style="margin-top:12px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+        <div class="smalltot">Total valor: <strong id="tec9TotalValue">R$ 0</strong></div>
+      </div>
+
+      <div class="actions">
+        <button id="btnCalcTec9" class="btn">Calcular</button>
+        <button id="btnClearTec9" class="btn secondary">Limpar Tec-9</button>
+      </div>
+    </div>
+
+    <!-- Produtos (mantidos) -->
     <div class="products">
       <h2 style="text-align:center;margin:14px 0 8px;font-size:16px;color:var(--muted)">Produtos</h2>
       <div class="grid">
@@ -173,13 +215,16 @@
   </div>
 
   <script>
-    // preços corrigidos (chaves sem espaços)
+    // preços corrigidos (sem tec9 na lista principal)
     const PRICES = { fuzil:290, sub:250, pistola:150, meta:350, coca:350, pct:390, pctCannabis:455, seringa:1000 };
     const RECIPES = {
       fuzil:{ cobre:1000, alum:1000, pul:267 },
       sub:{   cobre:500,  alum:500,  pul:167 },
       pistola:{ cobre:500, alum:0,  pul:100 }
     };
+
+    // Tec-9 recipe separado (não entra no cálculo principal)
+    const TEC9 = { price:110000, plastico:95, vidro:95, borracha:95, engrenagem:1, pecas_arma:4, corpo_sub:1, cobre:75, alum:75 };
 
     const el = id => document.getElementById(id);
     const money = v => 'R$ ' + Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -202,6 +247,7 @@
       calcularRecursos(qF, qS, qP);
     }
 
+    // cálcula recursos a partir das quantidades (exibe em unidades)
     function calcularRecursos(qF, qS, qP){
       const cobre = qF*RECIPES.fuzil.cobre/1000 + qS*RECIPES.sub.cobre/1000 + qP*RECIPES.pistola.cobre/1000;
       const alum  = qF*RECIPES.fuzil.alum/1000  + qS*RECIPES.sub.alum/1000  + qP*RECIPES.pistola.alum/1000;
@@ -230,6 +276,34 @@
       el('prodTotal').textContent = money(total);
     }
 
+    // --- Tec-9 separado ---
+    function calcularTec9(){
+      const q = +el('tec9Qty').value || 0;
+      const totalValue = q * TEC9.price;
+
+      // materiais unitários * quantidade
+      const plasticoTotal = q * TEC9.plastico;
+      const vidroTotal = q * TEC9.vidro;
+      const borrachaTotal = q * TEC9.borracha;
+      const engrenagemTotal = q * TEC9.engrenagem;
+      const pecasArmaTotal = q * TEC9.pecas_arma;
+      const corpoSubTotal = q * TEC9.corpo_sub;
+
+      // cobre e alum (essas eram especificadas como 75 cada) — convertido para mesma unidade exibida (kg-like)
+      const cobreTotal = (q * TEC9.cobre)/1000;
+      const alumTotal = (q * TEC9.alum)/1000;
+
+      el('tec9TotalValue').textContent = money(totalValue);
+      el('tec9_plastico_total').textContent = plasticoTotal;
+      el('tec9_vidro_total').textContent = vidroTotal;
+      el('tec9_borracha_total').textContent = borrachaTotal;
+      el('tec9_engrenagem_total').textContent = engrenagemTotal;
+      el('tec9_pecasarma_total').textContent = pecasArmaTotal;
+      el('tec9_corposub_total').textContent = corpoSubTotal;
+      el('tec9_cobre_total').textContent = Number(cobreTotal).toFixed(2);
+      el('tec9_alum_total').textContent = Number(alumTotal).toFixed(2);
+    }
+
     // eventos
     el('btnCalcMuni').addEventListener('click', calcularMuni);
     el('btnClearMuni').addEventListener('click', () => {
@@ -243,9 +317,13 @@
       calcularProdutos();
     });
 
+    el('btnCalcTec9').addEventListener('click', calcularTec9);
+    el('btnClearTec9').addEventListener('click', () => { el('tec9Qty').value = 0; calcularTec9(); });
+
     // inicializa
     calcularMuni();
     calcularProdutos();
+    calcularTec9();
   </script>
 </body>
 </html>
