@@ -3,83 +3,257 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Calculadora — Munições e Recursos</title>
+  <title>ÁGUIAS</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root{ --bg:#071228; --card:#0b1530; --accent:#06b6d4; --text:#e6eef8; --muted:#9fb1c8; --gap:12px; --glass: rgba(255,255,255,0.04); }
-    *{box-sizing:border-box} html,body{height:100%}
-    body{ margin:0; min-height:100vh; font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial; color:var(--text);
-      display:flex; align-items:center; justify-content:center; padding:28px; background:linear-gradient(180deg,#031022 0%, #071228 100%); }
-    .page-bg{ position:fixed; inset:0; z-index:-2; overflow:hidden; }
-    .page-bg::before{ content:''; position:absolute; inset:0; background: url('https://source.unsplash.com/1600x900/?motorcyclist') center/cover no-repeat fixed; filter: blur(6px) saturate(0.7) contrast(0.9); transform:scale(1.03); opacity:0.55; }
-    .page-bg::after{ content:''; position:absolute; inset:0; background: url('https://source.unsplash.com/1600x900/?motorcycle,rider') center/cover no-repeat fixed; mix-blend-mode:overlay; opacity:0.35; filter:grayscale(20%); }
-    .page-overlay{ position:fixed; inset:0; z-index:-1; background:linear-gradient(180deg, rgba(2,6,12,0.55) 0%, rgba(3,10,20,0.7) 100%); }
-    .wrap{ width:100%; max-width:980px; }
-    h1{ text-align:center; margin:0 0 18px; font-size:20px; letter-spacing:1px; color:var(--text); }
-    .card { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius:14px; padding:16px; border:1px solid var(--glass); box-shadow: 0 10px 40px rgba(2,6,23,0.6); overflow:hidden; backdrop-filter: blur(6px); margin-bottom:18px; }
-    .strip { display:grid; grid-template-columns: repeat(auto-fit,minmax(140px,1fr)); gap:var(--gap); margin-bottom:12px; justify-items:center; }
-    .strip .item{ background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005)); border-radius:10px; padding:12px; text-align:center; border:1px solid rgba(255,255,255,0.03); display:flex; flex-direction:column; align-items:center; }
-    .price{ color:var(--muted); font-size:13px; }
-    input[type="number"]{ width:100%; max-width:120px; padding:8px; border-radius:8px; border:1px solid rgba(255,255,255,0.06); background:transparent; color:var(--text); text-align:center; font-size:15px; }
-    .divider{ height:10px; margin:10px 0; display:flex; align-items:center; justify-content:center; }
-    .divider .label{ background:transparent; padding:6px 12px; color:var(--muted); font-size:13px; border-radius:999px; }
-    .resources{ display:grid; grid-template-columns: repeat(3,1fr); gap:var(--gap); }
-    .resbox{ background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005)); border-radius:10px; padding:14px; border:1px solid rgba(255,255,255,0.03); min-height:78px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center }
-    .resbox .label{ color:var(--muted); font-size:13px } .resbox .value{ margin-top:6px; font-weight:800; font-size:18px }
-    .smalltotals{ display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-top:12px } .smalltot{ background:rgba(255,255,255,0.02); padding:8px 12px; border-radius:10px; min-width:120px; text-align:center }
-    .actions{ display:flex; gap:10px; justify-content:center; margin-top:14px } .btn{ background:var(--accent); color:#042028; border:none; border-radius:10px; padding:10px 14px; font-weight:700; cursor:pointer } .btn.secondary{ background:transparent; border:1px solid rgba(255,255,255,0.06); color:var(--text) }
-    .products{ margin-top:22px } .products .grid{ display:grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); gap:12px } .panel{ background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005)); border-radius:10px; padding:12px; text-align:center; border:1px solid rgba(255,255,255,0.03) }
-    .tec9-card{ background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.007)); border-radius:12px; padding:12px; border:1px solid rgba(255,255,255,0.03); }
-    @media (max-width:760px){ .strip, .resources { grid-template-columns:1fr } input[type="number"]{ max-width:100% } .wrap{ padding:0 12px } }
+    :root {
+      --bg: #0b0d10;
+      --panel: #15181d;
+      --metal: #1e232b;
+      --highlight: #46b3ff;
+      --accent: #0077b6;
+      --text: #e5e7eb;
+      --muted: #a3a8b2;
+      --glass: rgba(255,255,255,0.05);
+      --shadow: 0 4px 15px rgba(0,0,0,0.6);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(180deg, var(--bg) 0%, #0e1115 100%);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 30px;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 0 0 20px;
+      font-size: 22px;
+      letter-spacing: 1px;
+      color: var(--highlight);
+      text-shadow: 0 0 8px rgba(70,179,255,0.3);
+    }
+
+    .wrap {
+      width: 100%;
+      max-width: 960px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, var(--panel), var(--metal));
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(6px);
+    }
+
+    .card h3 {
+      margin: 0 0 6px;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
+      gap: 14px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .item {
+      background: rgba(255,255,255,0.02);
+      border-radius: 10px;
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,0.05);
+      box-shadow: inset 0 0 10px rgba(255,255,255,0.02);
+    }
+
+    .price {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      max-width: 120px;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(0,0,0,0.3);
+      color: var(--text);
+      text-align: center;
+      font-size: 15px;
+      outline: none;
+      transition: border 0.2s;
+    }
+    input[type="number"]:focus {
+      border-color: var(--highlight);
+      box-shadow: 0 0 8px rgba(70,179,255,0.3);
+    }
+
+    select {
+      background: rgba(0,0,0,0.3);
+      color: var(--text);
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 6px 8px;
+      outline: none;
+    }
+
+    .divider {
+      text-align: center;
+      margin: 10px 0;
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.5px;
+    }
+
+    .resources {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .resbox {
+      background: rgba(255,255,255,0.02);
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .resbox .value {
+      margin-top: 4px;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--highlight);
+    }
+
+    .smalltotals {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .smalltot {
+      background: rgba(255,255,255,0.03);
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.04);
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 14px;
+    }
+
+    .btn {
+      background: linear-gradient(180deg, var(--highlight), var(--accent));
+      color: #000;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+    }
+
+    .btn.secondary {
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .products h2 {
+      text-align: center;
+      font-size: 16px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
+      gap: 12px;
+    }
+
+    .panel {
+      background: rgba(255,255,255,0.02);
+      border-radius: 10px;
+      padding: 12px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    @media (max-width:760px) {
+      .resources, .strip { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
-  <div class="page-bg"></div>
-  <div class="page-overlay"></div>
-
   <div class="wrap">
     <h1>Calculadora — Valores & Recursos</h1>
 
-    <!-- Munições principais (com desconto funcional) -->
-    <div class="card" role="region" aria-label="calculadora munições e recursos">
+    <!-- Munições -->
+    <div class="card">
       <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
         <label style="color:var(--muted);margin-right:8px">Desconto munições:</label>
-        <select id="muniDiscountSelect" aria-label="Desconto munições">
+        <select id="muniDiscountSelect">
           <option value="0">Nenhum</option>
           <option value="0.10">10%</option>
           <option value="0.20">20%</option>
         </select>
       </div>
 
-      <div class="strip" aria-label="valores">
+      <div class="strip">
         <div class="item">
           <h3>Fuzil</h3>
           <div class="price" id="price_fuzil">R$ 290</div>
-          <input id="fuzilQty" type="number" min="0" value="0" aria-label="Quantidade fuzil">
+          <input id="fuzilQty" type="number" min="0" value="0">
         </div>
-
         <div class="item">
           <h3>Sub</h3>
           <div class="price" id="price_sub">R$ 250</div>
-          <input id="subQty" type="number" min="0" value="0" aria-label="Quantidade sub">
+          <input id="subQty" type="number" min="0" value="0">
         </div>
-
         <div class="item">
           <h3>Pistola</h3>
           <div class="price" id="price_pistola">R$ 150</div>
-          <input id="pistolaQty" type="number" min="0" value="0" aria-label="Quantidade pistola">
+          <input id="pistolaQty" type="number" min="0" value="0">
         </div>
       </div>
 
-      <div class="divider"><div class="label">Recursos</div></div>
+      <div class="divider">Recursos</div>
 
-      <div class="resources" aria-label="recursos">
-        <div class="rescard"><div class="resbox"><div class="label">Cobres</div><div id="cobreTotal" class="value">0</div></div></div>
-        <div class="rescard"><div class="resbox"><div class="label">Alumínios</div><div id="alumTotal" class="value">0</div></div></div>
-        <div class="rescard"><div class="resbox"><div class="label">Pólvoras</div><div id="polvTotal" class="value">0</div></div></div>
+      <div class="resources">
+        <div class="resbox"><div class="label">Cobres</div><div id="cobreTotal" class="value">0</div></div>
+        <div class="resbox"><div class="label">Alumínios</div><div id="alumTotal" class="value">0</div></div>
+        <div class="resbox"><div class="label">Pólvoras</div><div id="polvTotal" class="value">0</div></div>
       </div>
 
-      <div style="margin-top:12px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+      <div class="smalltotals">
         <div class="smalltot">Fuzil: <strong id="muniFuzil">R$ 0</strong></div>
         <div class="smalltot">Sub: <strong id="muniSub">R$ 0</strong></div>
         <div class="smalltot">Pistola: <strong id="muniPistola">R$ 0</strong></div>
@@ -92,55 +266,48 @@
       </div>
     </div>
 
-    <!-- Tec-9 separado (mantém desconto) -->
-    <div class="card tec9-card" role="region" aria-label="calculadora tec-9">
+    <!-- Tec-9 (com TODOS os recursos) -->
+    <div class="card">
       <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
         <label style="color:var(--muted);margin-right:8px">Desconto Tec-9:</label>
-        <select id="tec9DiscountSelect" aria-label="Desconto Tec-9">
+        <select id="tec9DiscountSelect">
           <option value="0">Nenhum</option>
           <option value="0.10">10%</option>
           <option value="0.20">20%</option>
         </select>
       </div>
-
-      <div class="strip" aria-label="tec9-valores" style="justify-items:center;align-items:center;">
+      <div class="strip" style="justify-items:center;">
         <div class="item" style="max-width:220px;margin:0 auto;">
           <h3>Tec-9</h3>
           <div class="price" id="price_tec9">R$ 110.000</div>
-          <input id="tec9Qty" type="number" min="0" value="0" aria-label="Quantidade Tec-9">
+          <input id="tec9Qty" type="number" min="0" value="0">
         </div>
       </div>
-
-      <div class="divider"><div class="label">Recursos</div></div>
-
-      <div class="resources" aria-label="recursos-tec9" style="grid-template-columns: repeat(4,1fr); gap:12px;">
-        <div class="rescard"><div class="resbox"><div class="label">Cobres</div><div id="tec9_cobre_total" class="value">0</div></div></div>
-        <div class="rescard"><div class="resbox"><div class="label">Alumínios</div><div id="tec9_alum_total" class="value">0</div></div></div>
-        <div class="rescard"><div class="resbox"><div class="label">Plástico</div><div id="tec9_plastico_total" class="value">0</div></div></div>
-        <div class="rescard"><div class="resbox"><div class="label">Vidro</div><div id="tec9_vidro_total" class="value">0</div></div></div>
-        <div class="rescard"><div class="resbox"><div class="label">Borracha</div><div id="tec9_borracha_total" class="value">0</div></div></div>
-        <div class="rescard"><div class="resbox"><div class="label">Engrenagem</div><div id="tec9_engrenagem_total" class="value">0</div></div></div>
-        <div class="rescard"><div class="resbox"><div class="label">Peças arma</div><div id="tec9_pecasarma_total" class="value">0</div></div></div>
-        <div class="rescard"><div class="resbox"><div class="label">Corpo de sub</div><div id="tec9_corposub_total" class="value">0</div></div></div>
+      <div class="divider">Recursos</div>
+      <div class="resources" style="grid-template-columns: repeat(4,1fr); gap:12px;">
+        <div class="resbox"><div class="label">Cobres</div><div id="tec9_cobre_total" class="value">0</div></div>
+        <div class="resbox"><div class="label">Alumínios</div><div id="tec9_alum_total" class="value">0</div></div>
+        <div class="resbox"><div class="label">Plástico</div><div id="tec9_plastico_total" class="value">0</div></div>
+        <div class="resbox"><div class="label">Vidro</div><div id="tec9_vidro_total" class="value">0</div></div>
+        <div class="resbox"><div class="label">Borracha</div><div id="tec9_borracha_total" class="value">0</div></div>
+        <div class="resbox"><div class="label">Engrenagem</div><div id="tec9_engrenagem_total" class="value">0</div></div>
+        <div class="resbox"><div class="label">Peças arma</div><div id="tec9_pecasarma_total" class="value">0</div></div>
+        <div class="resbox"><div class="label">Corpo de sub</div><div id="tec9_corposub_total" class="value">0</div></div>
       </div>
 
-      <div style="margin-top:12px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
-        <div class="smalltot">Total valor: <strong id="tec9TotalValue">R$ 0</strong></div>
-      </div>
-
+      <div class="smalltotals"><div class="smalltot">Total valor: <strong id="tec9TotalValue">R$ 0</strong></div></div>
       <div class="actions">
         <button id="btnCalcTec9" class="btn">Calcular</button>
         <button id="btnClearTec9" class="btn secondary">Limpar</button>
       </div>
     </div>
 
-    <!-- Produtos (mantidos) com desconto funcional -->
-    <div class="products">
-      <h2 style="text-align:center;margin:14px 0 8px;font-size:16px;color:var(--muted)">Produtos</h2>
-
+    <!-- Produtos -->
+    <div class="card">
+      <h2>Produtos</h2>
       <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
         <label style="color:var(--muted);margin-right:8px">Desconto Produtos:</label>
-        <select id="prodDiscountSelect" aria-label="Desconto Produtos">
+        <select id="prodDiscountSelect">
           <option value="0">Nenhum</option>
           <option value="0.10">10%</option>
           <option value="0.20">20%</option>
@@ -148,39 +315,19 @@
       </div>
 
       <div class="grid">
-        <div class="panel">
-          <div style="font-weight:700">Meta</div>
-          <div class="price" id="price_meta" style="margin-bottom:8px">R$ 350</div>
-          <input id="metaQty" type="number" min="0" value="0">
-        </div>
-        <div class="panel">
-          <div style="font-weight:700">Coca</div>
-          <div class="price" id="price_coca" style="margin-bottom:8px">R$ 350</div>
-          <input id="cocaQty" type="number" min="0" value="0">
-        </div>
-        <div class="panel">
-          <div style="font-weight:700">Pacote de coca</div>
-          <div class="price" id="price_pct" style="margin-bottom:8px">R$ 390</div>
-          <input id="pctQty" type="number" min="0" value="0">
-        </div>
-        <div class="panel">
-          <div style="font-weight:700">Pacote de Cannabis</div>
-          <div class="price" id="price_pctCannabis" style="margin-bottom:8px">R$ 455</div>
-          <input id="pctCannabisQty" type="number" min="0" value="0">
-        </div>
-        <div class="panel">
-          <div style="font-weight:700">Seringa</div>
-          <div class="price" id="price_seringa" style="margin-bottom:8px">R$ 1000</div>
-          <input id="seringaQty" type="number" min="0" value="0">
-        </div>
+        <div class="panel"><div style="font-weight:700">Meta</div><div class="price" id="price_meta">R$ 350</div><input id="metaQty" type="number" min="0" value="0"></div>
+        <div class="panel"><div style="font-weight:700">Coca</div><div class="price" id="price_coca">R$ 350</div><input id="cocaQty" type="number" min="0" value="0"></div>
+        <div class="panel"><div style="font-weight:700">Pacote de coca</div><div class="price" id="price_pct">R$ 390</div><input id="pctQty" type="number" min="0" value="0"></div>
+        <div class="panel"><div style="font-weight:700">Pacote de Cannabis</div><div class="price" id="price_pctCannabis">R$ 455</div><input id="pctCannabisQty" type="number" min="0" value="0"></div>
+        <div class="panel"><div style="font-weight:700">Seringa</div><div class="price" id="price_seringa">R$ 1000</div><input id="seringaQty" type="number" min="0" value="0"></div>
       </div>
 
-      <div style="display:flex;gap:10px;justify-content:center;margin-top:10px">
+      <div class="actions">
         <button id="btnCalcProd" class="btn">Calcular Produtos</button>
         <button id="btnClearProd" class="btn secondary">Limpar Produtos</button>
       </div>
 
-      <div class="smalltotals" style="margin-top:10px">
+      <div class="smalltotals">
         <div class="smalltot">Meta: <strong id="metaTotal">R$ 0</strong></div>
         <div class="smalltot">Coca: <strong id="cocaTotal">R$ 0</strong></div>
         <div class="smalltot">Pct: <strong id="pctTotal">R$ 0</strong></div>
@@ -189,9 +336,9 @@
         <div class="smalltot">Total: <strong id="prodTotal">R$ 0</strong></div>
       </div>
     </div>
-
   </div>
 
+  <!-- Script (completa lógica e vínculos de IDs) -->
   <script>
     const PRICES = { fuzil:290, sub:250, pistola:150, meta:350, coca:350, pct:390, pctCannabis:455, seringa:1000 };
     const RECIPES = {
@@ -201,7 +348,7 @@
     };
     const TEC9 = { price:110000, plastico:95, vidro:95, borracha:95, engrenagem:1, pecas_arma:4, corpo_sub:1, cobre:75, alum:75 };
 
-    // active copies
+    // active prices (after discounts)
     let activeMuniPrices = { fuzil: PRICES.fuzil, sub: PRICES.sub, pistola: PRICES.pistola };
     let activeProdPrices = { meta: PRICES.meta, coca: PRICES.coca, pct: PRICES.pct, pctCannabis: PRICES.pctCannabis, seringa: PRICES.seringa };
     let activeTec9 = { ...TEC9 };
@@ -321,7 +468,7 @@
     el('btnCalcTec9').addEventListener('click', calcularTec9);
     el('btnClearTec9').addEventListener('click', () => { el('tec9Qty').value = 0; calcularTec9(); });
 
-    // discount handlers (muni fixed)
+    // discount handlers
     el('muniDiscountSelect').addEventListener('change', (e) => {
       const d = parseFloat(e.target.value) || 0;
       activeMuniPrices = applyDiscountToPrices({ fuzil: PRICES.fuzil, sub: PRICES.sub, pistola: PRICES.pistola }, d);
