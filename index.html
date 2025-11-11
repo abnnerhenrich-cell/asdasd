@@ -91,22 +91,32 @@
 
     <!-- Munições principais (sem Tec-9) -->
     <div class="card" role="region" aria-label="calculadora munições e recursos">
+      <!-- discount control (added) -->
+      <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
+        <label style="color:var(--muted);margin-right:8px">Desconto munições:</label>
+        <select id="muniDiscountSelect" aria-label="Desconto munições">
+          <option value="0">Nenhum</option>
+          <option value="0.10">10%</option>
+          <option value="0.20">20%</option>
+        </select>
+      </div>
+
       <div class="strip" aria-label="valores">
         <div class="item">
           <h3>Fuzil</h3>
-          <div class="price">R$ 290</div>
+          <div class="price" id="price_fuzil">R$ 290</div>
           <input id="fuzilQty" type="number" min="0" value="0" aria-label="Quantidade fuzil">
         </div>
 
         <div class="item">
           <h3>Sub</h3>
-          <div class="price">R$ 250</div>
+          <div class="price" id="price_sub">R$ 250</div>
           <input id="subQty" type="number" min="0" value="0" aria-label="Quantidade sub">
         </div>
 
         <div class="item">
           <h3>Pistola</h3>
-          <div class="price">R$ 150</div>
+          <div class="price" id="price_pistola">R$ 150</div>
           <input id="pistolaQty" type="number" min="0" value="0" aria-label="Quantidade pistola">
         </div>
       </div>
@@ -134,10 +144,20 @@
 
     <!-- Tec-9 separado -->
     <div class="card tec9-card" role="region" aria-label="calculadora tec-9">
+      <!-- discount control (added) -->
+      <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
+        <label style="color:var(--muted);margin-right:8px">Desconto Tec-9:</label>
+        <select id="tec9DiscountSelect" aria-label="Desconto Tec-9">
+          <option value="0">Nenhum</option>
+          <option value="0.10">10%</option>
+          <option value="0.20">20%</option>
+        </select>
+      </div>
+
       <div class="strip" aria-label="tec9-valores" style="justify-items:center;align-items:center;">
         <div class="item" style="max-width:220px;margin:0 auto;">
           <h3>Tec-9</h3>
-          <div class="price">R$ 110.000</div>
+          <div class="price" id="price_tec9">R$ 110.000</div>
           <input id="tec9Qty" type="number" min="0" value="0" aria-label="Quantidade Tec-9">
         </div>
       </div>
@@ -169,30 +189,41 @@
     <!-- Produtos (mantidos) -->
     <div class="products">
       <h2 style="text-align:center;margin:14px 0 8px;font-size:16px;color:var(--muted)">Produtos</h2>
+
+      <!-- discount control (added) -->
+      <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
+        <label style="color:var(--muted);margin-right:8px">Desconto Produtos:</label>
+        <select id="prodDiscountSelect" aria-label="Desconto Produtos">
+          <option value="0">Nenhum</option>
+          <option value="0.10">10%</option>
+          <option value="0.20">20%</option>
+        </select>
+      </div>
+
       <div class="grid">
         <div class="panel">
           <div style="font-weight:700">Meta</div>
-          <div class="price" style="margin-bottom:8px">R$ 350</div>
+          <div class="price" id="price_meta" style="margin-bottom:8px">R$ 350</div>
           <input id="metaQty" type="number" min="0" value="0">
         </div>
         <div class="panel">
           <div style="font-weight:700">Coca</div>
-          <div class="price" style="margin-bottom:8px">R$ 350</div>
+          <div class="price" id="price_coca" style="margin-bottom:8px">R$ 350</div>
           <input id="cocaQty" type="number" min="0" value="0">
         </div>
         <div class="panel">
           <div style="font-weight:700">Pacote de coca</div>
-          <div class="price" style="margin-bottom:8px">R$ 390</div>
+          <div class="price" id="price_pct" style="margin-bottom:8px">R$ 390</div>
           <input id="pctQty" type="number" min="0" value="0">
         </div>
         <div class="panel">
           <div style="font-weight:700">Pacote de Cannabis</div>
-          <div class="price" style="margin-bottom:8px">R$ 455</div>
+          <div class="price" id="price_pctCannabis" style="margin-bottom:8px">R$ 455</div>
           <input id="pctCannabisQty" type="number" min="0" value="0">
         </div>
         <div class="panel">
           <div style="font-weight:700">Seringa</div>
-          <div class="price" style="margin-bottom:8px">R$ 1000</div>
+          <div class="price" id="price_seringa" style="margin-bottom:8px">R$ 1000</div>
           <input id="seringaQty" type="number" min="0" value="0">
         </div>
       </div>
@@ -226,17 +257,51 @@
     // Tec-9 recipe separado (não entra no cálculo principal)
     const TEC9 = { price:110000, plastico:95, vidro:95, borracha:95, engrenagem:1, pecas_arma:4, corpo_sub:1, cobre:75, alum:75 };
 
+    // active price copies (will be changed by discounts)
+    let activeMuniPrices = { fuzil: PRICES.fuzil, sub: PRICES.sub, pistola: PRICES.pistola };
+    let activeProdPrices = { meta: PRICES.meta, coca: PRICES.coca, pct: PRICES.pct, pctCannabis: PRICES.pctCannabis, seringa: PRICES.seringa };
+    let activeTec9 = { ...TEC9 }; // price can be discounted
+
     const el = id => document.getElementById(id);
     const money = v => 'R$ ' + Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
 
+    // apply discount helper (discount is 0, 0.10, or 0.20)
+    function applyDiscountToPrices(baseObj, discount){
+      const out = {};
+      for(const k in baseObj){
+        if(typeof baseObj[k] === 'number'){
+          out[k] = +(baseObj[k] * (1 - discount)).toFixed(2);
+        } else out[k] = baseObj[k];
+      }
+      return out;
+    }
+
+    // update visible price labels
+    function updateMuniPriceLabels(){
+      el('price_fuzil').textContent = money(activeMuniPrices.fuzil);
+      el('price_sub').textContent = money(activeMuniPrices.sub);
+      el('price_pistola').textContent = money(activeMuniPrices.pistola);
+    }
+    function updateProdPriceLabels(){
+      el('price_meta').textContent = money(activeProdPrices.meta);
+      el('price_coca').textContent = money(activeProdPrices.coca);
+      el('price_pct').textContent = money(activeProdPrices.pct);
+      el('price_pctCannabis').textContent = money(activeProdPrices.pctCannabis);
+      el('price_seringa').textContent = money(activeProdPrices.seringa);
+    }
+    function updateTec9PriceLabel(){
+      el('price_tec9').textContent = money(activeTec9.price);
+    }
+
+    // calculations (use active prices)
     function calcularMuni(){
       const qF = +el('fuzilQty').value || 0;
       const qS = +el('subQty').value || 0;
       const qP = +el('pistolaQty').value || 0;
 
-      const vF = qF * PRICES.fuzil;
-      const vS = qS * PRICES.sub;
-      const vP = qP * PRICES.pistola;
+      const vF = qF * activeMuniPrices.fuzil;
+      const vS = qS * activeMuniPrices.sub;
+      const vP = qP * activeMuniPrices.pistola;
       const total = vF + vS + vP;
 
       el('muniFuzil').textContent = money(vF);
@@ -265,7 +330,7 @@
       const qPC = +el('pctCannabisQty').value || 0;
       const qS = +el('seringaQty').value || 0;
 
-      const vM = qM*PRICES.meta, vC = qC*PRICES.coca, vP = qP*PRICES.pct, vPC = qPC*PRICES.pctCannabis, vS = qS*PRICES.seringa;
+      const vM = qM*activeProdPrices.meta, vC = qC*activeProdPrices.coca, vP = qP*activeProdPrices.pct, vPC = qPC*activeProdPrices.pctCannabis, vS = qS*activeProdPrices.seringa;
       const total = vM + vC + vP + vPC + vS;
 
       el('metaTotal').textContent = money(vM);
@@ -279,19 +344,19 @@
     // --- Tec-9 separado ---
     function calcularTec9(){
       const q = +el('tec9Qty').value || 0;
-      const totalValue = q * TEC9.price;
+      const totalValue = q * activeTec9.price;
 
       // materiais unitários * quantidade
-      const plasticoTotal = q * TEC9.plastico;
-      const vidroTotal = q * TEC9.vidro;
-      const borrachaTotal = q * TEC9.borracha;
-      const engrenagemTotal = q * TEC9.engrenagem;
-      const pecasArmaTotal = q * TEC9.pecas_arma;
-      const corpoSubTotal = q * TEC9.corpo_sub;
+      const plasticoTotal = q * activeTec9.plastico;
+      const vidroTotal = q * activeTec9.vidro;
+      const borrachaTotal = q * activeTec9.borracha;
+      const engrenagemTotal = q * activeTec9.engrenagem;
+      const pecasArmaTotal = q * activeTec9.pecas_arma;
+      const corpoSubTotal = q * activeTec9.corpo_sub;
 
-      // cobre e alum (essas eram especificadas como 75 cada) — convertido para mesma unidade exibida (kg-like)
-      const cobreTotal = q * TEC9.cobre; // exibido em unidades (cada Tec-9 exige 75 cobre)
-      const alumTotal = q * TEC9.alum;
+      // cobre e alum (essas eram especificadas como 75 cada)
+      const cobreTotal = q * activeTec9.cobre;
+      const alumTotal = q * activeTec9.alum;
 
       el('tec9TotalValue').textContent = money(totalValue);
       el('tec9_plastico_total').textContent = plasticoTotal;
@@ -304,7 +369,7 @@
       el('tec9_alum_total').textContent = alumTotal;
     }
 
-    // eventos
+    // events
     el('btnCalcMuni').addEventListener('click', calcularMuni);
     el('btnClearMuni').addEventListener('click', () => {
       ['fuzilQty','subQty','pistolaQty'].forEach(id => el(id).value = 0);
@@ -320,7 +385,33 @@
     el('btnCalcTec9').addEventListener('click', calcularTec9);
     el('btnClearTec9').addEventListener('click', () => { el('tec9Qty').value = 0; calcularTec9(); });
 
-    // inicializa
+    // discount select handlers (automatically update displayed prices and keep calculations using discounted values)
+    el('muniDiscountSelect').addEventListener('change', (e) => {
+      const d = parseFloat(e.target.value) || 0;
+      activeMuniPrices = applyDiscountToPrices({ fuzil: PRICES.fuzil, sub: PRICES.sub, pistola: PRICES.pistola }, d);
+      updateMuniPriceLabels();
+      calcularMuni();
+    });
+
+    el('prodDiscountSelect').addEventListener('change', (e) => {
+      const d = parseFloat(e.target.value) || 0;
+      activeProdPrices = applyDiscountToPrices({ meta: PRICES.meta, coca: PRICES.coca, pct: PRICES.pct, pctCannabis: PRICES.pctCannabis, seringa: PRICES.seringa }, d);
+      updateProdPriceLabels();
+      calcularProdutos();
+    });
+
+    el('tec9DiscountSelect').addEventListener('change', (e) => {
+      const d = parseFloat(e.target.value) || 0;
+      // only price changes for tec9 (materials remain the same)
+      activeTec9 = { ...TEC9, price: +(TEC9.price * (1 - d)).toFixed(2) };
+      updateTec9PriceLabel();
+      calcularTec9();
+    });
+
+    // initialize
+    updateMuniPriceLabels();
+    updateProdPriceLabels();
+    updateTec9PriceLabel();
     calcularMuni();
     calcularProdutos();
     calcularTec9();
