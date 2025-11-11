@@ -4,82 +4,33 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Calculadora — Munições e Recursos</title>
-  <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root{
-      --bg:#071228; --card:#0b1530; --accent:#06b6d4; --text:#e6eef8; --muted:#9fb1c8;
-      --gap:12px; --glass: rgba(255,255,255,0.04);
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; min-height:100vh; font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
-      color:var(--text); display:flex; align-items:center; justify-content:center; padding:28px;
-      background:linear-gradient(180deg,#031022 0%, #071228 100%);
-    }
-
-    /* Decorative background with motoqueiros (random images from Unsplash) */
-    .page-bg{
-      position:fixed; inset:0; z-index:-2; overflow:hidden;
-    }
-    .page-bg::before{
-      content:''; position:absolute; inset:0; background: url('https://source.unsplash.com/1600x900/?motorcyclist') center/cover no-repeat fixed; filter: blur(6px) saturate(0.7) contrast(0.9); transform:scale(1.03); opacity:0.55;
-    }
-    .page-bg::after{
-      /* subtle second image layer for depth */
-      content:''; position:absolute; inset:0; background: url('https://source.unsplash.com/1600x900/?motorcycle,rider') center/cover no-repeat fixed; mix-blend-mode:overlay; opacity:0.35; filter:grayscale(20%);
-    }
-    /* gradient overlay for better contrast */
+    :root{ --bg:#071228; --card:#0b1530; --accent:#06b6d4; --text:#e6eef8; --muted:#9fb1c8; --gap:12px; --glass: rgba(255,255,255,0.04); }
+    *{box-sizing:border-box} html,body{height:100%}
+    body{ margin:0; min-height:100vh; font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial; color:var(--text);
+      display:flex; align-items:center; justify-content:center; padding:28px; background:linear-gradient(180deg,#031022 0%, #071228 100%); }
+    .page-bg{ position:fixed; inset:0; z-index:-2; overflow:hidden; }
+    .page-bg::before{ content:''; position:absolute; inset:0; background: url('https://source.unsplash.com/1600x900/?motorcyclist') center/cover no-repeat fixed; filter: blur(6px) saturate(0.7) contrast(0.9); transform:scale(1.03); opacity:0.55; }
+    .page-bg::after{ content:''; position:absolute; inset:0; background: url('https://source.unsplash.com/1600x900/?motorcycle,rider') center/cover no-repeat fixed; mix-blend-mode:overlay; opacity:0.35; filter:grayscale(20%); }
     .page-overlay{ position:fixed; inset:0; z-index:-1; background:linear-gradient(180deg, rgba(2,6,12,0.55) 0%, rgba(3,10,20,0.7) 100%); }
-
     .wrap{ width:100%; max-width:980px; }
-
     h1{ text-align:center; margin:0 0 18px; font-size:20px; letter-spacing:1px; color:var(--text); }
-
-    .card {
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border-radius:14px; padding:16px; border:1px solid var(--glass);
-      box-shadow: 0 10px 40px rgba(2,6,23,0.6); overflow:hidden; backdrop-filter: blur(6px);
-      margin-bottom:18px;
-    }
-
-    /* Top strip */
-    .strip { display:grid; grid-template-columns: repeat(auto-fit,minmax(140px,1fr)); gap:var(--gap); margin-bottom:12px; }
-
-    .strip .item{ background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005)); border-radius:10px; padding:12px; text-align:center; border:1px solid rgba(255,255,255,0.03); }
-    .strip .item h3{ margin:0; font-size:13px; font-weight:600 }
+    .card { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius:14px; padding:16px; border:1px solid var(--glass); box-shadow: 0 10px 40px rgba(2,6,23,0.6); overflow:hidden; backdrop-filter: blur(6px); margin-bottom:18px; }
+    .strip { display:grid; grid-template-columns: repeat(auto-fit,minmax(140px,1fr)); gap:var(--gap); margin-bottom:12px; justify-items:center; }
+    .strip .item{ background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005)); border-radius:10px; padding:12px; text-align:center; border:1px solid rgba(255,255,255,0.03); display:flex; flex-direction:column; align-items:center; }
     .price{ color:var(--muted); font-size:13px; }
     input[type="number"]{ width:100%; max-width:120px; padding:8px; border-radius:8px; border:1px solid rgba(255,255,255,0.06); background:transparent; color:var(--text); text-align:center; font-size:15px; }
-
     .divider{ height:10px; margin:10px 0; display:flex; align-items:center; justify-content:center; }
     .divider .label{ background:transparent; padding:6px 12px; color:var(--muted); font-size:13px; border-radius:999px; }
-
     .resources{ display:grid; grid-template-columns: repeat(3,1fr); gap:var(--gap); }
-    .rescard{ display:flex; align-items:center; justify-content:center; }
-    .resbox{ background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005)); border-radius:10px; padding:14px; border:1px solid rgba(255,255,255,0.03); min-height:78px; display:flex; flex-direction:column; align-items:center; justify-content:center }
-    .resbox .label{ color:var(--muted); font-size:13px }
-    .resbox .value{ margin-top:6px; font-weight:800; font-size:18px }
-
-    .smalltotals{ display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-top:12px }
-    .smalltot{ background:rgba(255,255,255,0.02); padding:8px 12px; border-radius:10px; min-width:120px; text-align:center }
-
-    .actions{ display:flex; gap:10px; justify-content:center; margin-top:14px }
-    .btn{ background:var(--accent); color:#042028; border:none; border-radius:10px; padding:10px 14px; font-weight:700; cursor:pointer }
-    .btn.secondary{ background:transparent; border:1px solid rgba(255,255,255,0.06); color:var(--text) }
-
-    .products{ margin-top:22px }
-    .products .grid{ display:grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); gap:12px }
-    .panel{ background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005)); border-radius:10px; padding:12px; text-align:center; border:1px solid rgba(255,255,255,0.03) }
-
-    /* Tec-9 specific small card */
+    .resbox{ background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005)); border-radius:10px; padding:14px; border:1px solid rgba(255,255,255,0.03); min-height:78px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center }
+    .resbox .label{ color:var(--muted); font-size:13px } .resbox .value{ margin-top:6px; font-weight:800; font-size:18px }
+    .smalltotals{ display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-top:12px } .smalltot{ background:rgba(255,255,255,0.02); padding:8px 12px; border-radius:10px; min-width:120px; text-align:center }
+    .actions{ display:flex; gap:10px; justify-content:center; margin-top:14px } .btn{ background:var(--accent); color:#042028; border:none; border-radius:10px; padding:10px 14px; font-weight:700; cursor:pointer } .btn.secondary{ background:transparent; border:1px solid rgba(255,255,255,0.06); color:var(--text) }
+    .products{ margin-top:22px } .products .grid{ display:grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); gap:12px } .panel{ background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005)); border-radius:10px; padding:12px; text-align:center; border:1px solid rgba(255,255,255,0.03) }
     .tec9-card{ background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.007)); border-radius:12px; padding:12px; border:1px solid rgba(255,255,255,0.03); }
-    .tec-grid{ display:grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); gap:10px; margin-top:10px }
-    .material{ background:rgba(255,255,255,0.02); padding:10px; border-radius:8px; text-align:center }
-
-    /* responsive */
     @media (max-width:760px){ .strip, .resources { grid-template-columns:1fr } input[type="number"]{ max-width:100% } .wrap{ padding:0 12px } }
-
   </style>
 </head>
 <body>
@@ -89,9 +40,8 @@
   <div class="wrap">
     <h1>Calculadora — Valores & Recursos</h1>
 
-    <!-- Munições principais (sem Tec-9) -->
+    <!-- Munições principais (com desconto funcional) -->
     <div class="card" role="region" aria-label="calculadora munições e recursos">
-      <!-- discount control (added) -->
       <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
         <label style="color:var(--muted);margin-right:8px">Desconto munições:</label>
         <select id="muniDiscountSelect" aria-label="Desconto munições">
@@ -142,9 +92,8 @@
       </div>
     </div>
 
-    <!-- Tec-9 separado -->
+    <!-- Tec-9 separado (mantém desconto) -->
     <div class="card tec9-card" role="region" aria-label="calculadora tec-9">
-      <!-- discount control (added) -->
       <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
         <label style="color:var(--muted);margin-right:8px">Desconto Tec-9:</label>
         <select id="tec9DiscountSelect" aria-label="Desconto Tec-9">
@@ -164,10 +113,9 @@
 
       <div class="divider"><div class="label">Recursos</div></div>
 
-      <!-- Todos os materiais do Tec-9 exibidos juntos, mesmo estilo das caixas -->
       <div class="resources" aria-label="recursos-tec9" style="grid-template-columns: repeat(4,1fr); gap:12px;">
-        <div class="rescard"><div class="resbox"><div class="label">Cobres</div><div id="tec9_cobre_total" class="value">0.00</div></div></div>
-        <div class="rescard"><div class="resbox"><div class="label">Alumínios</div><div id="tec9_alum_total" class="value">0.00</div></div></div>
+        <div class="rescard"><div class="resbox"><div class="label">Cobres</div><div id="tec9_cobre_total" class="value">0</div></div></div>
+        <div class="rescard"><div class="resbox"><div class="label">Alumínios</div><div id="tec9_alum_total" class="value">0</div></div></div>
         <div class="rescard"><div class="resbox"><div class="label">Plástico</div><div id="tec9_plastico_total" class="value">0</div></div></div>
         <div class="rescard"><div class="resbox"><div class="label">Vidro</div><div id="tec9_vidro_total" class="value">0</div></div></div>
         <div class="rescard"><div class="resbox"><div class="label">Borracha</div><div id="tec9_borracha_total" class="value">0</div></div></div>
@@ -186,11 +134,10 @@
       </div>
     </div>
 
-    <!-- Produtos (mantidos) -->
+    <!-- Produtos (mantidos) com desconto funcional -->
     <div class="products">
       <h2 style="text-align:center;margin:14px 0 8px;font-size:16px;color:var(--muted)">Produtos</h2>
 
-      <!-- discount control (added) -->
       <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
         <label style="color:var(--muted);margin-right:8px">Desconto Produtos:</label>
         <select id="prodDiscountSelect" aria-label="Desconto Produtos">
@@ -246,26 +193,22 @@
   </div>
 
   <script>
-    // preços corrigidos (sem tec9 na lista principal)
     const PRICES = { fuzil:290, sub:250, pistola:150, meta:350, coca:350, pct:390, pctCannabis:455, seringa:1000 };
     const RECIPES = {
       fuzil:{ cobre:1000, alum:1000, pul:267 },
       sub:{   cobre:500,  alum:500,  pul:167 },
       pistola:{ cobre:500, alum:0,  pul:100 }
     };
-
-    // Tec-9 recipe separado (não entra no cálculo principal)
     const TEC9 = { price:110000, plastico:95, vidro:95, borracha:95, engrenagem:1, pecas_arma:4, corpo_sub:1, cobre:75, alum:75 };
 
-    // active price copies (will be changed by discounts)
+    // active copies
     let activeMuniPrices = { fuzil: PRICES.fuzil, sub: PRICES.sub, pistola: PRICES.pistola };
     let activeProdPrices = { meta: PRICES.meta, coca: PRICES.coca, pct: PRICES.pct, pctCannabis: PRICES.pctCannabis, seringa: PRICES.seringa };
-    let activeTec9 = { ...TEC9 }; // price can be discounted
+    let activeTec9 = { ...TEC9 };
 
     const el = id => document.getElementById(id);
     const money = v => 'R$ ' + Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
 
-    // apply discount helper (discount is 0, 0.10, or 0.20)
     function applyDiscountToPrices(baseObj, discount){
       const out = {};
       for(const k in baseObj){
@@ -276,7 +219,6 @@
       return out;
     }
 
-    // update visible price labels
     function updateMuniPriceLabels(){
       el('price_fuzil').textContent = money(activeMuniPrices.fuzil);
       el('price_sub').textContent = money(activeMuniPrices.sub);
@@ -293,7 +235,6 @@
       el('price_tec9').textContent = money(activeTec9.price);
     }
 
-    // calculations (use active prices)
     function calcularMuni(){
       const qF = +el('fuzilQty').value || 0;
       const qS = +el('subQty').value || 0;
@@ -312,7 +253,6 @@
       calcularRecursos(qF, qS, qP);
     }
 
-    // cálcula recursos a partir das quantidades (exibe em unidades)
     function calcularRecursos(qF, qS, qP){
       const cobre = qF*RECIPES.fuzil.cobre/1000 + qS*RECIPES.sub.cobre/1000 + qP*RECIPES.pistola.cobre/1000;
       const alum  = qF*RECIPES.fuzil.alum/1000  + qS*RECIPES.sub.alum/1000  + qP*RECIPES.pistola.alum/1000;
@@ -341,20 +281,16 @@
       el('prodTotal').textContent = money(total);
     }
 
-    // --- Tec-9 separado ---
     function calcularTec9(){
       const q = +el('tec9Qty').value || 0;
       const totalValue = q * activeTec9.price;
 
-      // materiais unitários * quantidade
       const plasticoTotal = q * activeTec9.plastico;
       const vidroTotal = q * activeTec9.vidro;
       const borrachaTotal = q * activeTec9.borracha;
       const engrenagemTotal = q * activeTec9.engrenagem;
       const pecasArmaTotal = q * activeTec9.pecas_arma;
       const corpoSubTotal = q * activeTec9.corpo_sub;
-
-      // cobre e alum (essas eram especificadas como 75 cada)
       const cobreTotal = q * activeTec9.cobre;
       const alumTotal = q * activeTec9.alum;
 
@@ -385,7 +321,7 @@
     el('btnCalcTec9').addEventListener('click', calcularTec9);
     el('btnClearTec9').addEventListener('click', () => { el('tec9Qty').value = 0; calcularTec9(); });
 
-    // discount select handlers (automatically update displayed prices and keep calculations using discounted values)
+    // discount handlers (muni fixed)
     el('muniDiscountSelect').addEventListener('change', (e) => {
       const d = parseFloat(e.target.value) || 0;
       activeMuniPrices = applyDiscountToPrices({ fuzil: PRICES.fuzil, sub: PRICES.sub, pistola: PRICES.pistola }, d);
@@ -402,13 +338,12 @@
 
     el('tec9DiscountSelect').addEventListener('change', (e) => {
       const d = parseFloat(e.target.value) || 0;
-      // only price changes for tec9 (materials remain the same)
       activeTec9 = { ...TEC9, price: +(TEC9.price * (1 - d)).toFixed(2) };
       updateTec9PriceLabel();
       calcularTec9();
     });
 
-    // initialize
+    // init
     updateMuniPriceLabels();
     updateProdPriceLabels();
     updateTec9PriceLabel();
