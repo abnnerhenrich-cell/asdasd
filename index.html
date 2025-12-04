@@ -19,6 +19,8 @@
     }
 
     * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+
     body {
       font-family: 'Inter', sans-serif;
       background: linear-gradient(180deg, var(--bg) 0%, #0e1115 100%);
@@ -31,17 +33,32 @@
 
     h1 {
       text-align: center;
-      margin: 0 0 10px;
+      margin: 0 0 20px;
       font-size: 22px;
+      letter-spacing: 1px;
       color: var(--highlight);
+      text-shadow: 0 0 8px rgba(70,179,255,0.3);
     }
 
-    .wrap { width: 100%; max-width: 960px; }
+    .wrap {
+      width: 100%;
+      max-width: 960px;
+    }
+
     .card {
       background: linear-gradient(180deg, var(--panel), var(--metal));
+      border: 1px solid rgba(255,255,255,0.07);
       border-radius: 12px;
       padding: 18px;
       margin-bottom: 20px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(6px);
+    }
+
+    .card h3 {
+      margin: 0 0 6px;
+      color: var(--text);
+      font-weight: 600;
     }
 
     .strip {
@@ -52,186 +69,245 @@
       text-align: center;
     }
 
-    input, select {
+    .item {
+      background: rgba(255,255,255,0.02);
+      border-radius: 10px;
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,0.05);
+      box-shadow: inset 0 0 10px rgba(255,255,255,0.02);
+    }
+
+    .price {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    input[type="number"] {
       width: 100%;
+      max-width: 120px;
       padding: 8px;
       border-radius: 8px;
-      background: #000;
-      color: #fff;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(0,0,0,0.3);
+      color: var(--text);
+      text-align: center;
+      font-size: 15px;
+      outline: none;
+      transition: border 0.2s;
+    }
+    input[type="number"]:focus {
+      border-color: var(--highlight);
+      box-shadow: 0 0 8px rgba(70,179,255,0.3);
+    }
+
+    select {
+      background: rgba(0,0,0,0.3);
+      color: var(--text);
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 6px 8px;
+      outline: none;
+    }
+
+    .divider {
+      text-align: center;
+      margin: 10px 0;
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.5px;
+    }
+
+    .resources {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .resbox {
+      background: rgba(255,255,255,0.02);
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .resbox .value {
+      margin-top: 4px;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--highlight);
+    }
+
+    .smalltotals {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .smalltot {
+      background: rgba(255,255,255,0.03);
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.04);
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 14px;
     }
 
     .btn {
       background: linear-gradient(180deg, var(--highlight), var(--accent));
       color: #000;
-      font-weight: bold;
+      font-weight: 700;
+      border: none;
       border-radius: 8px;
-      padding: 10px;
-      width: 100%;
+      padding: 10px 14px;
       cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
     }
 
     .btn.secondary {
-      background: #333;
-      color: #fff;
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.1);
     }
 
-    .smalltot { text-align:center; margin-top:6px; }
+    .products h2 {
+      text-align: center;
+      font-size: 16px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
 
-    .vendaAtivo {
-      background: linear-gradient(180deg, #ff4747, #b60000);
-      color: #fff;
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
+      gap: 12px;
+    }
+
+    .panel {
+      background: rgba(255,255,255,0.02);
+      border-radius: 10px;
+      padding: 12px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .venda-active {
+      background: linear-gradient(90deg, #ffb86b, #ff6b6b);
+      color: #000 !important;
+      box-shadow: 0 6px 18px rgba(255,107,107,0.18);
+    }
+
+    @media (max-width:760px) {
+      .resources, .strip { grid-template-columns: 1fr; }
     }
   </style>
 </head>
-
 <body>
-<div class="wrap">
-  <h1>Calculadora — Valores & Recursos</h1>
+  <div class="wrap">
+    <h1>Calculadora — Valores & Recursos</h1>
 
-  <div style="text-align:center;margin-bottom:14px;">
-    <button id="toggleVenda" class="btn">MODO COMPRA</button>
-  </div>
+    <!-- === AQUI: botão simples de +30% (liga/desliga) === -->
+    <div style="display:flex;justify-content:center;margin-bottom:12px;">
+      <button id="toggle30" class="btn">Ativar +30%</button>
+    </div>
+    <!-- ================================================= -->
 
-  <!-- MUNIÇÕES -->
-  <div class="card">
-    <div class="strip">
-      <div>
-        <h3>Fuzil</h3>
-        <div id="price_fuzil">R$ 290</div>
-        <input id="fuzilQty" type="number" value="0">
+    <!-- Munições -->
+    <div class="card">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
+        <label style="color:var(--muted);margin-right:8px">Desconto munições:</label>
+        <select id="muniDiscountSelect">
+          <option value="0">Nenhum</option>
+          <option value="0.10">10%</option>
+          <option value="0.20">20%</option>
+          <option value="-0.30">30% Mais Caro</option>
+        </select>
       </div>
-      <div>
-        <h3>Sub</h3>
-        <div id="price_sub">R$ 250</div>
-        <input id="subQty" type="number" value="0">
+
+      <div class="strip">
+        <div class="item">
+          <h3>Fuzil</h3>
+          <div class="price" id="price_fuzil">R$ 290</div>
+          <input id="fuzilQty" type="number" min="0" value="0">
+        </div>
+        <div class="item">
+          <h3>Sub</h3>
+          <div class="price" id="price_sub">R$ 250</div>
+          <input id="subQty" type="number" min="0" value="0">
+        </div>
+        <div class="item">
+          <h3>Pistola</h3>
+          <div class="price" id="price_pistola">R$ 150</div>
+          <input id="pistolaQty" type="number" min="0" value="0">
+        </div>
       </div>
-      <div>
-        <h3>Pistola</h3>
-        <div id="price_pistola">R$ 150</div>
-        <input id="pistolaQty" type="number" value="0">
+
+      <div class="divider">Recursos</div>
+
+      <div class="resources">
+        <div class="resbox"><div class="label">Cobres</div><div id="cobreTotal" class="value">0</div></div>
+        <div class="resbox"><div class="label">Alumínios</div><div id="alumTotal" class="value">0</div></div>
+        <div class="resbox"><div class="label">Pólvoras</div><div id="polvTotal" class="value">0</div></div>
+      </div>
+
+      <div class="smalltotals">
+        <div class="smalltot">Fuzil: <strong id="muniFuzil">R$ 0</strong></div>
+        <div class="smalltot">Sub: <strong id="muniSub">R$ 0</strong></div>
+        <div class="smalltot">Pistola: <strong id="muniPistola">R$ 0</strong></div>
+        <div class="smalltot">Total: <strong id="muniTotal">R$ 0</strong></div>
+      </div>
+
+      <div class="actions">
+        <button id="btnCalcMuni" class="btn">Calcular</button>
+        <button id="btnClearMuni" class="btn secondary">Limpar</button>
       </div>
     </div>
 
-    <div class="strip">
-      <div class="smalltot">Fuzil: <span id="muniFuzil">R$ 0</span></div>
-      <div class="smalltot">Sub: <span id="muniSub">R$ 0</span></div>
-      <div class="smalltot">Pistola: <span id="muniPistola">R$ 0</span></div>
-      <div class="smalltot">Total: <span id="muniTotal">R$ 0</span></div>
-    </div>
+    <!-- Tec-9 (com TODOS os recursos) -->
+    <div class="card">
+      <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
+        <label style="color:var(--muted);margin-right:8px">Desconto Tec-9:</label>
+        <select id="tec9DiscountSelect">
+          <option value="0">Nenhum</option>
+          <option value="0.10">10%</option>
+          <option value="0.20">20%</option>
+          <option value="-0.30">30% Mais Caro</option>
+        </select>
+      </div>
+      <div class="strip" style="justify-items:center;">
+        <div class="item" style="max-width:220px;margin:0 auto;">
+          <h3>Tec-9</h3>
+          <div class="price" id="price_tec9">R$ 110.000</div>
+          <input id="tec9Qty" type="number" min="0" value="0">
+        </div>
+      </div>
+      <div class="divider">Recursos</div>
+      <div class="resources" style="grid-template-columns: repeat(4,1fr); gap:12px;">
+        <div class="resbox"><div class="label">Cobres</div><div id="tec9_cobre_total" class="value">0</div></div>
+        <div class="resbox"><div class="label">Alumínios</div><div id="tec9_alum_total" class="value">0</div></div>
+        <div class="resbox"><div class="label">Plástico</div><div id="tec9_plastico_total" class="value">0</div></div>
+        <div class="resbox"><div class="label">Vidro</div><div id="tec9_vidro_total" class="value">0</div></div>
+        <div class="resbox"><div class="label">Borracha</div><div id="tec9_borracha_total" class="value">0</div></div>
+        <div class="resbox"><div class="label">Engrenagem</div><div id="tec9_engrenagem_total" class="value">0</div></div>
+        <div class="resbox"><div class="label">Peças arma</div><div id="tec9_pecasarma_total" class="value">0</div></div>
+        <div class="resbox"><div class="label">Corpo de sub</div><div id="tec9_corposub_total" class="value">0</div></div>
+      </div>
 
-    <button class="btn" id="btnCalcMuni">Calcular</button>
-  </div>
-
-  <!-- TEC-9 -->
-  <div class="card">
-    <h3>Tec-9</h3>
-    <div id="price_tec9">R$ 110.000</div>
-    <input id="tec9Qty" type="number" value="0">
-    <div class="smalltot">Total: <span id="tec9TotalValue">R$ 0</span></div>
-    <button class="btn" id="btnCalcTec9">Calcular Tec-9</button>
-  </div>
-
-  <!-- PRODUTOS -->
-  <div class="card">
-    <h3>Produtos</h3>
-    <div class="strip">
-      <div>Meta <input id="metaQty" type="number" value="0"></div>
-      <div>Coca <input id="cocaQty" type="number" value="0"></div>
-      <div>Pct <input id="pctQty" type="number" value="0"></div>
-      <div>Seringa <input id="seringaQty" type="number" value="0"></div>
-    </div>
-
-    <div class="strip">
-      <div class="smalltot">Total: <span id="prodTotal">R$ 0</span></div>
-    </div>
-
-    <button class="btn" id="btnCalcProd">Calcular Produtos</button>
-  </div>
-</div>
-
-<script>
-const PRICES = { fuzil:290, sub:250, pistola:150, meta:350, coca:350, pct:390, seringa:1000 };
-const TEC9 = { price:110000 };
-
-let activeMuniPrices = { ...PRICES };
-let activeProdPrices = { ...PRICES };
-let activeTec9 = { ...TEC9 };
-
-let modoVendaAtivo = false;
-
-const el = id => document.getElementById(id);
-const money = v => 'R$ ' + Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2});
-
-function aplicarVenda(){
-  activeMuniPrices = {
-    fuzil: PRICES.fuzil * 1.30,
-    sub: PRICES.sub * 1.30,
-    pistola: PRICES.pistola * 1.30
-  };
-
-  activeProdPrices = {
-    meta: PRICES.meta * 1.30,
-    coca: PRICES.coca * 1.30,
-    pct: PRICES.pct * 1.30,
-    seringa: PRICES.seringa * 1.30
-  };
-
-  activeTec9.price = TEC9.price * 1.30;
-}
-
-function removerVenda(){
-  activeMuniPrices = { ...PRICES };
-  activeProdPrices = { ...PRICES };
-  activeTec9.price = TEC9.price;
-}
-
-el('toggleVenda').addEventListener('click', ()=>{
-  modoVendaAtivo = !modoVendaAtivo;
-
-  if(modoVendaAtivo){
-    aplicarVenda();
-    el('toggleVenda').textContent = "MODO VENDA (+30%)";
-    el('toggleVenda').classList.add("vendaAtivo");
-  } else {
-    removerVenda();
-    el('toggleVenda').textContent = "MODO COMPRA";
-    el('toggleVenda').classList.remove("vendaAtivo");
-  }
-
-  atualizarPrecos();
-});
-
-function atualizarPrecos(){
-  el('price_fuzil').textContent = money(activeMuniPrices.fuzil);
-  el('price_sub').textContent = money(activeMuniPrices.sub);
-  el('price_pistola').textContent = money(activeMuniPrices.pistola);
-  el('price_tec9').textContent = money(activeTec9.price);
-}
-
-el('btnCalcMuni').addEventListener('click', ()=>{
-  let v = el('fuzilQty').value * activeMuniPrices.fuzil;
-  let s = el('subQty').value * activeMuniPrices.sub;
-  let p = el('pistolaQty').value * activeMuniPrices.pistola;
-  el('muniFuzil').textContent = money(v);
-  el('muniSub').textContent = money(s);
-  el('muniPistola').textContent = money(p);
-  el('muniTotal').textContent = money(v+s+p);
-});
-
-el('btnCalcTec9').addEventListener('click', ()=>{
-  el('tec9TotalValue').textContent = money(activeTec9.price * el('tec9Qty').value);
-});
-
-el('btnCalcProd').addEventListener('click', ()=>{
-  let total = el('metaQty').value*activeProdPrices.meta +
-              el('cocaQty').value*activeProdPrices.coca +
-              el('pctQty').value*activeProdPrices.pct +
-              el('seringaQty').value*activeProdPrices.seringa;
-
-  el('prodTotal').textContent = money(total);
-});
-
-atualizarPrecos();
-</script>
-</body>
-</html>
+      <div class="smalltotals"><div class="smalltot">Total valor: <strong id="tec9TotalValue">R$ 0</strong></div></div>
+      <div class="actions">
