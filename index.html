@@ -2,501 +2,103 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ÁGUIAS</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg: #0b0d10;
-      --panel: #15181d;
-      --metal: #1e232b;
-      --highlight: #46b3ff;
-      --accent: #0077b6;
-      --text: #e5e7eb;
-      --muted: #a3a8b2;
-      --glass: rgba(255,255,255,0.05);
-      --shadow: 0 4px 15px rgba(0,0,0,0.6);
-    }
-
-    * { box-sizing: border-box; }
-    html, body { height: 100%; margin: 0; }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(180deg, var(--bg) 0%, #0e1115 100%);
-      color: var(--text);
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 30px;
-    }
-
-    h1 {
-      text-align: center;
-      margin: 0 0 20px;
-      font-size: 22px;
-      letter-spacing: 1px;
-      color: var(--highlight);
-      text-shadow: 0 0 8px rgba(70,179,255,0.3);
-    }
-
-    .wrap {
-      width: 100%;
-      max-width: 960px;
-    }
-
-    .card {
-      background: linear-gradient(180deg, var(--panel), var(--metal));
-      border: 1px solid rgba(255,255,255,0.07);
-      border-radius: 12px;
-      padding: 18px;
-      margin-bottom: 20px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(6px);
-    }
-
-    .card h3 {
-      margin: 0 0 6px;
-      color: var(--text);
-      font-weight: 600;
-    }
-
-    .strip {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px,1fr));
-      gap: 14px;
-      margin-bottom: 10px;
-      text-align: center;
-    }
-
-    .item {
-      background: rgba(255,255,255,0.02);
-      border-radius: 10px;
-      padding: 14px;
-      border: 1px solid rgba(255,255,255,0.05);
-      box-shadow: inset 0 0 10px rgba(255,255,255,0.02);
-    }
-
-    .price {
-      color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 6px;
-    }
-
-    input[type="number"] {
-      width: 100%;
-      max-width: 120px;
-      padding: 8px;
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: rgba(0,0,0,0.3);
-      color: var(--text);
-      text-align: center;
-      font-size: 15px;
-      outline: none;
-      transition: border 0.2s;
-    }
-    input[type="number"]:focus {
-      border-color: var(--highlight);
-      box-shadow: 0 0 8px rgba(70,179,255,0.3);
-    }
-
-    select {
-      background: rgba(0,0,0,0.3);
-      color: var(--text);
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.1);
-      padding: 6px 8px;
-      outline: none;
-    }
-
-    .divider {
-      text-align: center;
-      margin: 10px 0;
-      color: var(--muted);
-      font-size: 13px;
-      letter-spacing: 0.5px;
-    }
-
-    .resources {
-      display: grid;
-      grid-template-columns: repeat(3,1fr);
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
-    .resbox {
-      background: rgba(255,255,255,0.02);
-      border-radius: 8px;
-      padding: 10px;
-      text-align: center;
-      border: 1px solid rgba(255,255,255,0.05);
-    }
-
-    .resbox .value {
-      margin-top: 4px;
-      font-size: 17px;
-      font-weight: 700;
-      color: var(--highlight);
-    }
-
-    .smalltotals {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 10px;
-    }
-
-    .smalltot {
-      background: rgba(255,255,255,0.03);
-      padding: 8px 12px;
-      border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.04);
-      text-align: center;
-      font-size: 14px;
-    }
-
-    .actions {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      margin-top: 14px;
-    }
-
-    .btn {
-      background: linear-gradient(180deg, var(--highlight), var(--accent));
-      color: #000;
-      font-weight: 700;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 14px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .btn:hover {
-      filter: brightness(1.1);
-      transform: translateY(-1px);
-    }
-
-    .btn.secondary {
-      background: rgba(255,255,255,0.05);
-      color: var(--text);
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .products h2 {
-      text-align: center;
-      font-size: 16px;
-      color: var(--muted);
-      margin-bottom: 10px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
-      gap: 12px;
-    }
-
-    .panel {
-      background: rgba(255,255,255,0.02);
-      border-radius: 10px;
-      padding: 12px;
-      text-align: center;
-      border: 1px solid rgba(255,255,255,0.05);
-    }
-
-    @media (max-width:760px) {
-      .resources, .strip { grid-template-columns: 1fr; }
-    }
+    body{background:#0b0d10;color:#fff;font-family:Arial;padding:20px}
+    .card{background:#15181d;padding:15px;margin-bottom:20px;border-radius:10px}
+    .btn{padding:10px 15px;margin:5px;border:none;border-radius:6px;background:#46b3ff;font-weight:bold;cursor:pointer}
+    .secondary{background:#333;color:#fff}
+    input{padding:6px;width:80px}
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <h1>Calculadora — Valores & Recursos</h1>
 
-    <!-- Munições -->
-    <div class="card">
-      <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
-        <label style="color:var(--muted);margin-right:8px">Desconto munições:</label>
-        <select id="muniDiscountSelect">
-          <option value="0">Nenhum</option>
-          <option value="0.10">10%</option>
-          <option value="0.20">20%</option>
-        </select>
-      </div>
+<h2>Munições</h2>
+<div class="card">
+  Fuzil <input id="fuzilQty" type="number" value="0">
+  Sub <input id="subQty" type="number" value="0">
+  Pistola <input id="pistolaQty" type="number" value="0">
+  
+  <p>Total: <strong id="muniTotal">R$ 0,00</strong></p>
 
-      <div class="strip">
-        <div class="item">
-          <h3>Fuzil</h3>
-          <div class="price" id="price_fuzil">R$ 290</div>
-          <input id="fuzilQty" type="number" min="0" value="0">
-        </div>
-        <div class="item">
-          <h3>Sub</h3>
-          <div class="price" id="price_sub">R$ 250</div>
-          <input id="subQty" type="number" min="0" value="0">
-        </div>
-        <div class="item">
-          <h3>Pistola</h3>
-          <div class="price" id="price_pistola">R$ 150</div>
-          <input id="pistolaQty" type="number" min="0" value="0">
-        </div>
-      </div>
+  <button id="btnCalcMuni" class="btn">Calcular</button>
+  <button id="btnClearMuni" class="btn secondary">Limpar</button>
+  <button id="btnMuni30" class="btn">+30%</button>
+</div>
 
-      <div class="divider">Recursos</div>
+<h2>Tec-9</h2>
+<div class="card">
+  Quantidade <input id="tec9Qty" type="number" value="0">
+  <p>Total: <strong id="tec9TotalValue">R$ 0,00</strong></p>
 
-      <div class="resources">
-        <div class="resbox"><div class="label">Cobres</div><div id="cobreTotal" class="value">0</div></div>
-        <div class="resbox"><div class="label">Alumínios</div><div id="alumTotal" class="value">0</div></div>
-        <div class="resbox"><div class="label">Pólvoras</div><div id="polvTotal" class="value">0</div></div>
-      </div>
+  <button id="btnCalcTec9" class="btn">Calcular</button>
+  <button id="btnClearTec9" class="btn secondary">Limpar</button>
+  <button id="btnTec930" class="btn">+30%</button>
+</div>
 
-      <div class="smalltotals">
-        <div class="smalltot">Fuzil: <strong id="muniFuzil">R$ 0</strong></div>
-        <div class="smalltot">Sub: <strong id="muniSub">R$ 0</strong></div>
-        <div class="smalltot">Pistola: <strong id="muniPistola">R$ 0</strong></div>
-        <div class="smalltot">Total: <strong id="muniTotal">R$ 0</strong></div>
-      </div>
+<h2>Produtos</h2>
+<div class="card">
+  Meta <input id="metaQty" type="number" value="0">
+  Coca <input id="cocaQty" type="number" value="0">
+  <p>Total: <strong id="prodTotal">R$ 0,00</strong></p>
 
-      <div class="actions">
-        <button id="btnCalcMuni" class="btn">Calcular</button>
-        <button id="btnClearMuni" class="btn secondary">Limpar</button>
-      </div>
-    </div>
+  <button id="btnCalcProd" class="btn">Calcular</button>
+  <button id="btnClearProd" class="btn secondary">Limpar</button>
+  <button id="btnProd30" class="btn">+30%</button>
+</div>
 
-    <!-- Tec-9 (com TODOS os recursos) -->
-    <div class="card">
-      <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
-        <label style="color:var(--muted);margin-right:8px">Desconto Tec-9:</label>
-        <select id="tec9DiscountSelect">
-          <option value="0">Nenhum</option>
-          <option value="0.10">10%</option>
-          <option value="0.20">20%</option>
-        </select>
-      </div>
-      <div class="strip" style="justify-items:center;">
-        <div class="item" style="max-width:220px;margin:0 auto;">
-          <h3>Tec-9</h3>
-          <div class="price" id="price_tec9">R$ 110.000</div>
-          <input id="tec9Qty" type="number" min="0" value="0">
-        </div>
-      </div>
-      <div class="divider">Recursos</div>
-      <div class="resources" style="grid-template-columns: repeat(4,1fr); gap:12px;">
-        <div class="resbox"><div class="label">Cobres</div><div id="tec9_cobre_total" class="value">0</div></div>
-        <div class="resbox"><div class="label">Alumínios</div><div id="tec9_alum_total" class="value">0</div></div>
-        <div class="resbox"><div class="label">Plástico</div><div id="tec9_plastico_total" class="value">0</div></div>
-        <div class="resbox"><div class="label">Vidro</div><div id="tec9_vidro_total" class="value">0</div></div>
-        <div class="resbox"><div class="label">Borracha</div><div id="tec9_borracha_total" class="value">0</div></div>
-        <div class="resbox"><div class="label">Engrenagem</div><div id="tec9_engrenagem_total" class="value">0</div></div>
-        <div class="resbox"><div class="label">Peças arma</div><div id="tec9_pecasarma_total" class="value">0</div></div>
-        <div class="resbox"><div class="label">Corpo de sub</div><div id="tec9_corposub_total" class="value">0</div></div>
-      </div>
+<script>
+const PRICES = { fuzil:290, sub:250, pistola:150, meta:350, coca:350 };
+const TEC9 = { price:110000 };
 
-      <div class="smalltotals"><div class="smalltot">Total valor: <strong id="tec9TotalValue">R$ 0</strong></div></div>
-      <div class="actions">
-        <button id="btnCalcTec9" class="btn">Calcular</button>
-        <button id="btnClearTec9" class="btn secondary">Limpar</button>
-      </div>
-    </div>
+const el = id => document.getElementById(id);
+const money = v => 'R$ ' + Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2});
 
-    <!-- Produtos -->
-    <div class="card">
-      <h2>Produtos</h2>
-      <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
-        <label style="color:var(--muted);margin-right:8px">Desconto Produtos:</label>
-        <select id="prodDiscountSelect">
-          <option value="0">Nenhum</option>
-          <option value="0.10">10%</option>
-          <option value="0.20">20%</option>
-        </select>
-      </div>
+// ===== MUNIÇÕES =====
+function calcularMuni(){
+  const qF = +el('fuzilQty').value || 0;
+  const qS = +el('subQty').value || 0;
+  const qP = +el('pistolaQty').value || 0;
 
-      <div class="grid">
-        <div class="panel"><div style="font-weight:700">Meta</div><div class="price" id="price_meta">R$ 350</div><input id="metaQty" type="number" min="0" value="0"></div>
-        <div class="panel"><div style="font-weight:700">Coca</div><div class="price" id="price_coca">R$ 350</div><input id="cocaQty" type="number" min="0" value="0"></div>
-        <div class="panel"><div style="font-weight:700">Pacote de coca</div><div class="price" id="price_pct">R$ 390</div><input id="pctQty" type="number" min="0" value="0"></div>
-        <div class="panel"><div style="font-weight:700">Pacote de Cannabis</div><div class="price" id="price_pctCannabis">R$ 455</div><input id="pctCannabisQty" type="number" min="0" value="0"></div>
-        <div class="panel"><div style="font-weight:700">Seringa</div><div class="price" id="price_seringa">R$ 1000</div><input id="seringaQty" type="number" min="0" value="0"></div>
-      </div>
+  const total = qF*PRICES.fuzil + qS*PRICES.sub + qP*PRICES.pistola;
+  el('muniTotal').textContent = money(total);
+}
 
-      <div class="actions">
-        <button id="btnCalcProd" class="btn">Calcular Produtos</button>
-        <button id="btnClearProd" class="btn secondary">Limpar Produtos</button>
-      </div>
+el('btnCalcMuni').onclick = calcularMuni;
+el('btnClearMuni').onclick = ()=>{el('fuzilQty').value=0;el('subQty').value=0;el('pistolaQty').value=0;calcularMuni();}
+el('btnMuni30').onclick = ()=>{
+  const atual = Number(el('muniTotal').textContent.replace(/[^\d]/g,''))/100;
+  el('muniTotal').textContent = money(atual*1.3);
+};
 
-      <div class="smalltotals">
-        <div class="smalltot">Meta: <strong id="metaTotal">R$ 0</strong></div>
-        <div class="smalltot">Coca: <strong id="cocaTotal">R$ 0</strong></div>
-        <div class="smalltot">Pct: <strong id="pctTotal">R$ 0</strong></div>
-        <div class="smalltot">Pct Cannabis: <strong id="pctCannabisTotal">R$ 0</strong></div>
-        <div class="smalltot">Seringa: <strong id="seringaTotal">R$ 0</strong></div>
-        <div class="smalltot">Total: <strong id="prodTotal">R$ 0</strong></div>
-      </div>
-    </div>
-  </div>
+// ===== TEC-9 =====
+function calcularTec9(){
+  const q = +el('tec9Qty').value || 0;
+  el('tec9TotalValue').textContent = money(q * TEC9.price);
+}
 
-  <!-- Script (completa lógica e vínculos de IDs) -->
-  <script>
-    const PRICES = { fuzil:290, sub:250, pistola:150, meta:350, coca:350, pct:390, pctCannabis:455, seringa:1000 };
-    const RECIPES = {
-      fuzil:{ cobre:1000, alum:1000, pul:267 },
-      sub:{   cobre:500,  alum:500,  pul:167 },
-      pistola:{ cobre:500, alum:0,  pul:100 }
-    };
-    const TEC9 = { price:110000, plastico:95, vidro:95, borracha:95, engrenagem:1, pecas_arma:4, corpo_sub:1, cobre:75, alum:75 };
+el('btnCalcTec9').onclick = calcularTec9;
+el('btnClearTec9').onclick = ()=>{el('tec9Qty').value=0;calcularTec9();}
+el('btnTec930').onclick = ()=>{
+  const atual = Number(el('tec9TotalValue').textContent.replace(/[^\d]/g,''))/100;
+  el('tec9TotalValue').textContent = money(atual*1.3);
+};
 
-    // active prices (after discounts)
-    let activeMuniPrices = { fuzil: PRICES.fuzil, sub: PRICES.sub, pistola: PRICES.pistola };
-    let activeProdPrices = { meta: PRICES.meta, coca: PRICES.coca, pct: PRICES.pct, pctCannabis: PRICES.pctCannabis, seringa: PRICES.seringa };
-    let activeTec9 = { ...TEC9 };
+// ===== PRODUTOS =====
+function calcularProdutos(){
+  const m = +el('metaQty').value || 0;
+  const c = +el('cocaQty').value || 0;
+  const total = m*PRICES.meta + c*PRICES.coca;
+  el('prodTotal').textContent = money(total);
+}
 
-    const el = id => document.getElementById(id);
-    const money = v => 'R$ ' + Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+el('btnCalcProd').onclick = calcularProdutos;
+el('btnClearProd').onclick = ()=>{el('metaQty').value=0;el('cocaQty').value=0;calcularProdutos();}
+el('btnProd30').onclick = ()=>{
+  const atual = Number(el('prodTotal').textContent.replace(/[^\d]/g,''))/100;
+  el('prodTotal').textContent = money(atual*1.3);
+};
+</script>
 
-    function applyDiscountToPrices(baseObj, discount){
-      const out = {};
-      for(const k in baseObj){
-        if(typeof baseObj[k] === 'number'){
-          out[k] = +(baseObj[k] * (1 - discount)).toFixed(2);
-        } else out[k] = baseObj[k];
-      }
-      return out;
-    }
-
-    function updateMuniPriceLabels(){
-      el('price_fuzil').textContent = money(activeMuniPrices.fuzil);
-      el('price_sub').textContent = money(activeMuniPrices.sub);
-      el('price_pistola').textContent = money(activeMuniPrices.pistola);
-    }
-    function updateProdPriceLabels(){
-      el('price_meta').textContent = money(activeProdPrices.meta);
-      el('price_coca').textContent = money(activeProdPrices.coca);
-      el('price_pct').textContent = money(activeProdPrices.pct);
-      el('price_pctCannabis').textContent = money(activeProdPrices.pctCannabis);
-      el('price_seringa').textContent = money(activeProdPrices.seringa);
-    }
-    function updateTec9PriceLabel(){
-      el('price_tec9').textContent = money(activeTec9.price);
-    }
-
-    function calcularMuni(){
-      const qF = +el('fuzilQty').value || 0;
-      const qS = +el('subQty').value || 0;
-      const qP = +el('pistolaQty').value || 0;
-
-      const vF = qF * activeMuniPrices.fuzil;
-      const vS = qS * activeMuniPrices.sub;
-      const vP = qP * activeMuniPrices.pistola;
-      const total = vF + vS + vP;
-
-      el('muniFuzil').textContent = money(vF);
-      el('muniSub').textContent = money(vS);
-      el('muniPistola').textContent = money(vP);
-      el('muniTotal').textContent = money(total);
-
-      calcularRecursos(qF, qS, qP);
-    }
-
-    function calcularRecursos(qF, qS, qP){
-      const cobre = qF*RECIPES.fuzil.cobre/1000 + qS*RECIPES.sub.cobre/1000 + qP*RECIPES.pistola.cobre/1000;
-      const alum  = qF*RECIPES.fuzil.alum/1000  + qS*RECIPES.sub.alum/1000  + qP*RECIPES.pistola.alum/1000;
-      const polv  = qF*RECIPES.fuzil.pul/1000   + qS*RECIPES.sub.pul/1000   + qP*RECIPES.pistola.pul/1000;
-
-      el('cobreTotal').textContent = Number(cobre).toFixed(2);
-      el('alumTotal').textContent  = Number(alum).toFixed(2);
-      el('polvTotal').textContent  = Number(polv).toFixed(2);
-    }
-
-    function calcularProdutos(){
-      const qM = +el('metaQty').value || 0;
-      const qC = +el('cocaQty').value || 0;
-      const qP = +el('pctQty').value || 0;
-      const qPC = +el('pctCannabisQty').value || 0;
-      const qS = +el('seringaQty').value || 0;
-
-      const vM = qM*activeProdPrices.meta, vC = qC*activeProdPrices.coca, vP = qP*activeProdPrices.pct, vPC = qPC*activeProdPrices.pctCannabis, vS = qS*activeProdPrices.seringa;
-      const total = vM + vC + vP + vPC + vS;
-
-      el('metaTotal').textContent = money(vM);
-      el('cocaTotal').textContent = money(vC);
-      el('pctTotal').textContent = money(vP);
-      el('pctCannabisTotal').textContent = money(vPC);
-      el('seringaTotal').textContent = money(vS);
-      el('prodTotal').textContent = money(total);
-    }
-
-    function calcularTec9(){
-      const q = +el('tec9Qty').value || 0;
-      const totalValue = q * activeTec9.price;
-
-      const plasticoTotal = q * activeTec9.plastico;
-      const vidroTotal = q * activeTec9.vidro;
-      const borrachaTotal = q * activeTec9.borracha;
-      const engrenagemTotal = q * activeTec9.engrenagem;
-      const pecasArmaTotal = q * activeTec9.pecas_arma;
-      const corpoSubTotal = q * activeTec9.corpo_sub;
-      const cobreTotal = q * activeTec9.cobre;
-      const alumTotal = q * activeTec9.alum;
-
-      el('tec9TotalValue').textContent = money(totalValue);
-      el('tec9_plastico_total').textContent = plasticoTotal;
-      el('tec9_vidro_total').textContent = vidroTotal;
-      el('tec9_borracha_total').textContent = borrachaTotal;
-      el('tec9_engrenagem_total').textContent = engrenagemTotal;
-      el('tec9_pecasarma_total').textContent = pecasArmaTotal;
-      el('tec9_corposub_total').textContent = corpoSubTotal;
-      el('tec9_cobre_total').textContent = cobreTotal;
-      el('tec9_alum_total').textContent = alumTotal;
-    }
-
-    // events
-    el('btnCalcMuni').addEventListener('click', calcularMuni);
-    el('btnClearMuni').addEventListener('click', () => {
-      ['fuzilQty','subQty','pistolaQty'].forEach(id => el(id).value = 0);
-      calcularMuni();
-    });
-
-    el('btnCalcProd').addEventListener('click', calcularProdutos);
-    el('btnClearProd').addEventListener('click', () => {
-      ['metaQty','cocaQty','pctQty','pctCannabisQty','seringaQty'].forEach(id => el(id).value = 0);
-      calcularProdutos();
-    });
-
-    el('btnCalcTec9').addEventListener('click', calcularTec9);
-    el('btnClearTec9').addEventListener('click', () => { el('tec9Qty').value = 0; calcularTec9(); });
-
-    // discount handlers
-    el('muniDiscountSelect').addEventListener('change', (e) => {
-      const d = parseFloat(e.target.value) || 0;
-      activeMuniPrices = applyDiscountToPrices({ fuzil: PRICES.fuzil, sub: PRICES.sub, pistola: PRICES.pistola }, d);
-      updateMuniPriceLabels();
-      calcularMuni();
-    });
-
-    el('prodDiscountSelect').addEventListener('change', (e) => {
-      const d = parseFloat(e.target.value) || 0;
-      activeProdPrices = applyDiscountToPrices({ meta: PRICES.meta, coca: PRICES.coca, pct: PRICES.pct, pctCannabis: PRICES.pctCannabis, seringa: PRICES.seringa }, d);
-      updateProdPriceLabels();
-      calcularProdutos();
-    });
-
-    el('tec9DiscountSelect').addEventListener('change', (e) => {
-      const d = parseFloat(e.target.value) || 0;
-      activeTec9 = { ...TEC9, price: +(TEC9.price * (1 - d)).toFixed(2) };
-      updateTec9PriceLabel();
-      calcularTec9();
-    });
-
-    // init
-    updateMuniPriceLabels();
-    updateProdPriceLabels();
-    updateTec9PriceLabel();
-    calcularMuni();
-    calcularProdutos();
-    calcularTec9();
-  </script>
 </body>
 </html>
