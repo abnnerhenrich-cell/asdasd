@@ -207,12 +207,6 @@
       border: 1px solid rgba(255,255,255,0.05);
     }
 
-    .venda-active {
-      background: linear-gradient(90deg, #ffb86b, #ff6b6b);
-      color: #000 !important;
-      box-shadow: 0 6px 18px rgba(255,107,107,0.18);
-    }
-
     @media (max-width:760px) {
       .resources, .strip { grid-template-columns: 1fr; }
     }
@@ -222,12 +216,6 @@
   <div class="wrap">
     <h1>Calculadora — Valores & Recursos</h1>
 
-    <!-- === AQUI: botão simples de +30% (liga/desliga) === -->
-    <div style="display:flex;justify-content:center;margin-bottom:12px;">
-      <button id="toggle30" class="btn">Ativar +30%</button>
-    </div>
-    <!-- ================================================= -->
-
     <!-- Munições -->
     <div class="card">
       <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
@@ -236,7 +224,6 @@
           <option value="0">Nenhum</option>
           <option value="0.10">10%</option>
           <option value="0.20">20%</option>
-          <option value="-0.30">30% Mais Caro</option>
         </select>
       </div>
 
@@ -287,7 +274,6 @@
           <option value="0">Nenhum</option>
           <option value="0.10">10%</option>
           <option value="0.20">20%</option>
-          <option value="-0.30">30% Mais Caro</option>
         </select>
       </div>
       <div class="strip" style="justify-items:center;">
@@ -311,3 +297,206 @@
 
       <div class="smalltotals"><div class="smalltot">Total valor: <strong id="tec9TotalValue">R$ 0</strong></div></div>
       <div class="actions">
+        <button id="btnCalcTec9" class="btn">Calcular</button>
+        <button id="btnClearTec9" class="btn secondary">Limpar</button>
+      </div>
+    </div>
+
+    <!-- Produtos -->
+    <div class="card">
+      <h2>Produtos</h2>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
+        <label style="color:var(--muted);margin-right:8px">Desconto Produtos:</label>
+        <select id="prodDiscountSelect">
+          <option value="0">Nenhum</option>
+          <option value="0.10">10%</option>
+          <option value="0.20">20%</option>
+        </select>
+      </div>
+
+      <div class="grid">
+        <div class="panel"><div style="font-weight:700">Meta</div><div class="price" id="price_meta">R$ 350</div><input id="metaQty" type="number" min="0" value="0"></div>
+        <div class="panel"><div style="font-weight:700">Coca</div><div class="price" id="price_coca">R$ 350</div><input id="cocaQty" type="number" min="0" value="0"></div>
+        <div class="panel"><div style="font-weight:700">Pacote de coca</div><div class="price" id="price_pct">R$ 390</div><input id="pctQty" type="number" min="0" value="0"></div>
+        <div class="panel"><div style="font-weight:700">Pacote de Cannabis</div><div class="price" id="price_pctCannabis">R$ 455</div><input id="pctCannabisQty" type="number" min="0" value="0"></div>
+        <div class="panel"><div style="font-weight:700">Seringa</div><div class="price" id="price_seringa">R$ 1000</div><input id="seringaQty" type="number" min="0" value="0"></div>
+      </div>
+
+      <div class="actions">
+        <button id="btnCalcProd" class="btn">Calcular Produtos</button>
+        <button id="btnClearProd" class="btn secondary">Limpar Produtos</button>
+      </div>
+
+      <div class="smalltotals">
+        <div class="smalltot">Meta: <strong id="metaTotal">R$ 0</strong></div>
+        <div class="smalltot">Coca: <strong id="cocaTotal">R$ 0</strong></div>
+        <div class="smalltot">Pct: <strong id="pctTotal">R$ 0</strong></div>
+        <div class="smalltot">Pct Cannabis: <strong id="pctCannabisTotal">R$ 0</strong></div>
+        <div class="smalltot">Seringa: <strong id="seringaTotal">R$ 0</strong></div>
+        <div class="smalltot">Total: <strong id="prodTotal">R$ 0</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script (completa lógica e vínculos de IDs) -->
+  <script>
+    const PRICES = { fuzil:290, sub:250, pistola:150, meta:350, coca:350, pct:390, pctCannabis:455, seringa:1000 };
+    const RECIPES = {
+      fuzil:{ cobre:1000, alum:1000, pul:267 },
+      sub:{   cobre:500,  alum:500,  pul:167 },
+      pistola:{ cobre:500, alum:0,  pul:100 }
+    };
+    const TEC9 = { price:110000, plastico:95, vidro:95, borracha:95, engrenagem:1, pecas_arma:4, corpo_sub:1, cobre:75, alum:75 };
+
+    // active prices (after discounts)
+    let activeMuniPrices = { fuzil: PRICES.fuzil, sub: PRICES.sub, pistola: PRICES.pistola };
+    let activeProdPrices = { meta: PRICES.meta, coca: PRICES.coca, pct: PRICES.pct, pctCannabis: PRICES.pctCannabis, seringa: PRICES.seringa };
+    let activeTec9 = { ...TEC9 };
+
+    const el = id => document.getElementById(id);
+    const money = v => 'R$ ' + Number(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+
+    function applyDiscountToPrices(baseObj, discount){
+      const out = {};
+      for(const k in baseObj){
+        if(typeof baseObj[k] === 'number'){
+          out[k] = +(baseObj[k] * (1 - discount)).toFixed(2);
+        } else out[k] = baseObj[k];
+      }
+      return out;
+    }
+
+    function updateMuniPriceLabels(){
+      el('price_fuzil').textContent = money(activeMuniPrices.fuzil);
+      el('price_sub').textContent = money(activeMuniPrices.sub);
+      el('price_pistola').textContent = money(activeMuniPrices.pistola);
+    }
+    function updateProdPriceLabels(){
+      el('price_meta').textContent = money(activeProdPrices.meta);
+      el('price_coca').textContent = money(activeProdPrices.coca);
+      el('price_pct').textContent = money(activeProdPrices.pct);
+      el('price_pctCannabis').textContent = money(activeProdPrices.pctCannabis);
+      el('price_seringa').textContent = money(activeProdPrices.seringa);
+    }
+    function updateTec9PriceLabel(){
+      el('price_tec9').textContent = money(activeTec9.price);
+    }
+
+    function calcularMuni(){
+      const qF = +el('fuzilQty').value || 0;
+      const qS = +el('subQty').value || 0;
+      const qP = +el('pistolaQty').value || 0;
+
+      const vF = qF * activeMuniPrices.fuzil;
+      const vS = qS * activeMuniPrices.sub;
+      const vP = qP * activeMuniPrices.pistola;
+      const total = vF + vS + vP;
+
+      el('muniFuzil').textContent = money(vF);
+      el('muniSub').textContent = money(vS);
+      el('muniPistola').textContent = money(vP);
+      el('muniTotal').textContent = money(total);
+
+      calcularRecursos(qF, qS, qP);
+    }
+
+    function calcularRecursos(qF, qS, qP){
+      const cobre = qF*RECIPES.fuzil.cobre/1000 + qS*RECIPES.sub.cobre/1000 + qP*RECIPES.pistola.cobre/1000;
+      const alum  = qF*RECIPES.fuzil.alum/1000  + qS*RECIPES.sub.alum/1000  + qP*RECIPES.pistola.alum/1000;
+      const polv  = qF*RECIPES.fuzil.pul/1000   + qS*RECIPES.sub.pul/1000   + qP*RECIPES.pistola.pul/1000;
+
+      el('cobreTotal').textContent = Number(cobre).toFixed(2);
+      el('alumTotal').textContent  = Number(alum).toFixed(2);
+      el('polvTotal').textContent  = Number(polv).toFixed(2);
+    }
+
+    function calcularProdutos(){
+      const qM = +el('metaQty').value || 0;
+      const qC = +el('cocaQty').value || 0;
+      const qP = +el('pctQty').value || 0;
+      const qPC = +el('pctCannabisQty').value || 0;
+      const qS = +el('seringaQty').value || 0;
+
+      const vM = qM*activeProdPrices.meta, vC = qC*activeProdPrices.coca, vP = qP*activeProdPrices.pct, vPC = qPC*activeProdPrices.pctCannabis, vS = qS*activeProdPrices.seringa;
+      const total = vM + vC + vP + vPC + vS;
+
+      el('metaTotal').textContent = money(vM);
+      el('cocaTotal').textContent = money(vC);
+      el('pctTotal').textContent = money(vP);
+      el('pctCannabisTotal').textContent = money(vPC);
+      el('seringaTotal').textContent = money(vS);
+      el('prodTotal').textContent = money(total);
+    }
+
+    function calcularTec9(){
+      const q = +el('tec9Qty').value || 0;
+      const totalValue = q * activeTec9.price;
+
+      const plasticoTotal = q * activeTec9.plastico;
+      const vidroTotal = q * activeTec9.vidro;
+      const borrachaTotal = q * activeTec9.borracha;
+      const engrenagemTotal = q * activeTec9.engrenagem;
+      const pecasArmaTotal = q * activeTec9.pecas_arma;
+      const corpoSubTotal = q * activeTec9.corpo_sub;
+      const cobreTotal = q * activeTec9.cobre;
+      const alumTotal = q * activeTec9.alum;
+
+      el('tec9TotalValue').textContent = money(totalValue);
+      el('tec9_plastico_total').textContent = plasticoTotal;
+      el('tec9_vidro_total').textContent = vidroTotal;
+      el('tec9_borracha_total').textContent = borrachaTotal;
+      el('tec9_engrenagem_total').textContent = engrenagemTotal;
+      el('tec9_pecasarma_total').textContent = pecasArmaTotal;
+      el('tec9_corposub_total').textContent = corpoSubTotal;
+      el('tec9_cobre_total').textContent = cobreTotal;
+      el('tec9_alum_total').textContent = alumTotal;
+    }
+
+    // events
+    el('btnCalcMuni').addEventListener('click', calcularMuni);
+    el('btnClearMuni').addEventListener('click', () => {
+      ['fuzilQty','subQty','pistolaQty'].forEach(id => el(id).value = 0);
+      calcularMuni();
+    });
+
+    el('btnCalcProd').addEventListener('click', calcularProdutos);
+    el('btnClearProd').addEventListener('click', () => {
+      ['metaQty','cocaQty','pctQty','pctCannabisQty','seringaQty'].forEach(id => el(id).value = 0);
+      calcularProdutos();
+    });
+
+    el('btnCalcTec9').addEventListener('click', calcularTec9);
+    el('btnClearTec9').addEventListener('click', () => { el('tec9Qty').value = 0; calcularTec9(); });
+
+    // discount handlers
+    el('muniDiscountSelect').addEventListener('change', (e) => {
+      const d = parseFloat(e.target.value) || 0;
+      activeMuniPrices = applyDiscountToPrices({ fuzil: PRICES.fuzil, sub: PRICES.sub, pistola: PRICES.pistola }, d);
+      updateMuniPriceLabels();
+      calcularMuni();
+    });
+
+    el('prodDiscountSelect').addEventListener('change', (e) => {
+      const d = parseFloat(e.target.value) || 0;
+      activeProdPrices = applyDiscountToPrices({ meta: PRICES.meta, coca: PRICES.coca, pct: PRICES.pct, pctCannabis: PRICES.pctCannabis, seringa: PRICES.seringa }, d);
+      updateProdPriceLabels();
+      calcularProdutos();
+    });
+
+    el('tec9DiscountSelect').addEventListener('change', (e) => {
+      const d = parseFloat(e.target.value) || 0;
+      activeTec9 = { ...TEC9, price: +(TEC9.price * (1 - d)).toFixed(2) };
+      updateTec9PriceLabel();
+      calcularTec9();
+    });
+
+    // init
+    updateMuniPriceLabels();
+    updateProdPriceLabels();
+    updateTec9PriceLabel();
+    calcularMuni();
+    calcularProdutos();
+    calcularTec9();
+  </script>
+</body>
+</html>
